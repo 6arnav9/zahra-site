@@ -1,9 +1,9 @@
-// app/layout.tsx
 import type { Metadata } from "next";
 import { Cinzel, Montserrat, Open_Sans } from "next/font/google";
 import "./globals.css";
+// IMPORT YOUR NEW NAVBAR
+import Navbar from "./components/Navbar"; 
 
-// 1. Initialize fonts OUTSIDE the component
 const cinzel = Cinzel({ 
   subsets: ["latin"], 
   variable: "--font-cinzel",
@@ -34,8 +34,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      {/* 2. Apply all variables to the body */}
-      <body className={`${cinzel.variable} ${montserrat.variable} ${openSans.variable} font-sans antialiased`}>
+      {/* ADD suppressHydrationWarning HERE */}
+      <body suppressHydrationWarning className={`${cinzel.variable} ${montserrat.variable} ${openSans.variable} font-sans antialiased bg-black text-white`}>
+        <Navbar />
         {children}
       </body>
     </html>
