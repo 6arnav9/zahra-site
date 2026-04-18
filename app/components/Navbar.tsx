@@ -4,30 +4,76 @@ import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
+/**
+ * PRODUCTION-GRADE NAVBAR
+ * Routing Logic:
+ * - Parent items link to index pages (e.g., /industries)
+ * - Sub-items link to slug pages (e.g., /industries/hospitality)
+ */
+
+const CONTACT_INFO = {
+  phone: "+971-55 9996543",
+  phoneLink: "tel:+971559996543",
+  email: "info@alzahrahr.com",
+  emailLink: "mailto:info@alzahrahr.com",
+};
+
+const INDUSTRIES = [
+  { name: "Construction & Civil", href: "/industries/construction" },
+  { name: "Hospitality", href: "/industries/hospitality" },
+  { name: "Healthcare", href: "/industries/healthcare" },
+  { name: "Security", href: "/industries/security" },
+  { name: "Office & Admin", href: "/industries/office-admin" },
+  { name: "Transportation", href: "/industries/transportation" },
+];
+
+const OFFICES = [
+  { name: "United Arab Emirates", href: "/offices/ae" },
+  { name: "India", href: "/offices/in" },
+  { name: "Nepal", href: "/offices/np" },
+];
+
+const COUNTRIES = {
+  middleEast: [
+    { name: "United Arab Emirates", short: "UAE", href: "/countries/uae" },
+    { name: "Saudi Arabia", short: "Saudi Arabia", href: "/countries/saudi-arabia" },
+    { name: "Qatar", short: "Qatar", href: "/countries/qatar" },
+    { name: "Oman", short: "Oman", href: "/countries/oman" },
+    { name: "Kuwait", short: "Kuwait", href: "/countries/kuwait" },
+    { name: "Bahrain", short: "Bahrain", href: "/countries/bahrain" },
+  ],
+  global: [
+    { name: "Russia", href: "/countries/russia" }, // Swapped Germany for Russia
+    { name: "Romania", href: "/countries/romania" },
+    { name: "Poland", href: "/countries/poland" },
+    { name: "Malta", href: "/countries/malta" },
+    { name: "Cyprus", href: "/countries/cyprus" },
+    { name: "Croatia", href: "/countries/croatia" },
+  ]
+};
+
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [openAccordion, setOpenAccordion] = useState<string | null>(null);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
+    const handleScroll = () => setIsScrolled(window.scrollY > 50);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Prevent scrolling on the body when the mobile menu is open
   useEffect(() => {
-    if (isMobileMenuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
+    document.body.style.overflow = isMobileMenuOpen ? 'hidden' : 'unset';
   }, [isMobileMenuOpen]);
 
   const toggleAccordion = (section: string) => {
     setOpenAccordion(openAccordion === section ? null : section);
+  };
+
+  const closeMenu = () => {
+    setIsMobileMenuOpen(false);
+    setOpenAccordion(null);
   };
 
   return (
@@ -40,13 +86,13 @@ const Navbar = () => {
         <div className={`hidden lg:flex justify-center items-center w-full pb-2 mb-2 border-b border-white/10 text-xs font-[family-name:var(--font-open-sans)] transition-all duration-300 ${isScrolled ? 'hidden' : 'flex'}`}>
           <div className="flex items-center gap-2 opacity-90 font-semibold tracking-wide">
             <span className="text-[#39B54A]">Interested? Contact us now:</span>
-            <a href="tel:+971559996543" className="hover:text-[#39B54A] transition-colors flex items-center gap-1">📞 +971-55 9996543</a>
+            <a href={CONTACT_INFO.phoneLink} className="hover:text-[#39B54A] transition-colors flex items-center gap-1">📞 {CONTACT_INFO.phone}</a>
             <span className="text-white/30 px-2">|</span>
-            <a href="mailto:info@alzahrahr.com" className="hover:text-[#39B54A] transition-colors flex items-center gap-1">✉️ info@alzahrahr.com</a>
+            <a href={CONTACT_INFO.emailLink} className="hover:text-[#39B54A] transition-colors flex items-center gap-1">✉️ {CONTACT_INFO.email}</a>
           </div>
         </div>
 
-        {/* Main Navigation Bar */}
+        {/* Main Nav Bar */}
         <div className="w-full px-4 lg:px-6 xl:px-12 flex justify-between items-center relative z-20">
           
           {/* Logo Area */}
@@ -55,10 +101,10 @@ const Navbar = () => {
               <Image src="/logo.png" alt="Al Zahra Logo" fill className="object-contain" />
             </div>
             <div className="flex flex-col">
-              <span className="font-[family-name:var(--font-cinzel)] font-bold text-lg lg:text-base xl:text-xl leading-none tracking-wide text-white [@media(max-height:450px)]:text-base">
+              <span className="font-[family-name:var(--font-cinzel)] font-bold text-lg lg:text-base xl:text-xl leading-none tracking-wide text-white">
                 Al Zahra
               </span>
-              <span className="text-[7px] lg:text-[6px] xl:text-[8px] font-bold tracking-[0.2em] uppercase mt-0.5 text-white/80 [@media(max-height:450px)]:text-[5px]">
+              <span className="text-[7px] lg:text-[6px] xl:text-[8px] font-bold tracking-[0.2em] uppercase mt-0.5 text-white/80">
                 Human Resources
               </span>
             </div>
@@ -70,47 +116,22 @@ const Navbar = () => {
             <Link href="/about" className="hover:text-[#39B54A] transition-colors py-4">About Us</Link>
             <Link href="/services" className="hover:text-[#39B54A] transition-colors py-4">Services</Link>
             
-            <div className="relative group cursor-pointer py-4">
-              <span className="hover:text-[#39B54A] transition-colors flex items-center gap-1">Industries <span className="text-[7px] ml-1">▼</span></span>
-               <div className="absolute top-full left-0 w-56 bg-white text-[#1B2B21] p-2 rounded-b-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all translate-y-2 group-hover:translate-y-0 border-t-2 border-[#39B54A]">
-                <Link href="/industries/construction" className="block px-4 py-3 hover:bg-[#E8F5E9] hover:text-[#006837] rounded transition-colors text-xs font-semibold">Construction & Civil</Link>
-                <Link href="/industries/hospitality" className="block px-4 py-3 hover:bg-[#E8F5E9] hover:text-[#006837] rounded transition-colors text-xs font-semibold">Hospitality</Link>
-                <Link href="/industries/healthcare" className="block px-4 py-3 hover:bg-[#E8F5E9] hover:text-[#006837] rounded transition-colors text-xs font-semibold">Healthcare</Link>
-                <Link href="/industries/security" className="block px-4 py-3 hover:bg-[#E8F5E9] hover:text-[#006837] rounded transition-colors text-xs font-semibold">Security</Link>
-                <Link href="/industries/office-admin" className="block px-4 py-3 hover:bg-[#E8F5E9] hover:text-[#006837] rounded transition-colors text-xs font-semibold">Office & Admin</Link>
-                <Link href="/industries/transportation" className="block px-4 py-3 hover:bg-[#E8F5E9] hover:text-[#006837] rounded transition-colors text-xs font-semibold">Transportation</Link>
-              </div>
-            </div>
+            <Dropdown label="Industries" href="/industries" items={INDUSTRIES} />
+            <Dropdown label="Offices" href="/offices" items={OFFICES} />
 
+            {/* Countries Mega Dropdown */}
             <div className="relative group cursor-pointer py-4">
-              <span className="hover:text-[#39B54A] transition-colors flex items-center gap-1">Offices <span className="text-[7px] ml-1">▼</span></span>
-               <div className="absolute top-full left-0 w-48 bg-white text-[#1B2B21] p-2 rounded-b-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all translate-y-2 group-hover:translate-y-0 border-t-2 border-[#39B54A]">
-                <Link href="/offices/uae" className="block px-4 py-3 hover:bg-[#E8F5E9] hover:text-[#006837] rounded transition-colors text-xs font-semibold">United Arab Emirates</Link>
-                <Link href="/offices/india" className="block px-4 py-3 hover:bg-[#E8F5E9] hover:text-[#006837] rounded transition-colors text-xs font-semibold">India</Link>
-                <Link href="/offices/nepal" className="block px-4 py-3 hover:bg-[#E8F5E9] hover:text-[#006837] rounded transition-colors text-xs font-semibold">Nepal</Link>
-              </div>
-            </div>
-
-            <div className="relative group cursor-pointer py-4">
-              <span className="hover:text-[#39B54A] transition-colors flex items-center gap-1">Countries we Serve <span className="text-[7px] ml-1">▼</span></span>
+              <Link href="/countries" className="hover:text-[#39B54A] transition-colors flex items-center gap-1">
+                Countries we Serve <span className="text-[7px] ml-1">▼</span>
+              </Link>
                <div className="absolute top-full -left-[100px] xl:left-0 w-[400px] bg-white text-[#1B2B21] p-4 rounded-b-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all translate-y-2 group-hover:translate-y-0 border-t-2 border-[#39B54A] flex gap-4">
-                <div className="flex-1">
+                <div className="flex-1 text-left">
                   <span className="text-[#006837] font-black text-[10px] mb-2 block border-b pb-1">MIDDLE EAST</span>
-                  <Link href="/countries/uae" className="block px-2 py-2 hover:bg-[#E8F5E9] rounded text-xs font-semibold">United Arab Emirates</Link>
-                  <Link href="/countries/saudi-arabia" className="block px-2 py-2 hover:bg-[#E8F5E9] rounded text-xs font-semibold">Saudi Arabia</Link>
-                  <Link href="/countries/qatar" className="block px-2 py-2 hover:bg-[#E8F5E9] rounded text-xs font-semibold">Qatar</Link>
-                  <Link href="/countries/oman" className="block px-2 py-2 hover:bg-[#E8F5E9] rounded text-xs font-semibold">Oman</Link>
-                  <Link href="/countries/kuwait" className="block px-2 py-2 hover:bg-[#E8F5E9] rounded text-xs font-semibold">Kuwait</Link>
-                  <Link href="/countries/bahrain" className="block px-2 py-2 hover:bg-[#E8F5E9] rounded text-xs font-semibold">Bahrain</Link>
+                  {COUNTRIES.middleEast.map(c => <Link key={c.href} href={c.href} className="block px-2 py-2 hover:bg-[#E8F5E9] rounded text-xs font-semibold">{c.name}</Link>)}
                 </div>
-                <div className="flex-1 border-l pl-4">
+                <div className="flex-1 border-l pl-4 text-left">
                   <span className="text-[#006837] font-black text-[10px] mb-2 block border-b pb-1">EUROPE & GLOBAL</span>
-                  <Link href="/countries/romania" className="block px-2 py-2 hover:bg-[#E8F5E9] rounded text-xs font-semibold">Romania</Link>
-                  <Link href="/countries/poland" className="block px-2 py-2 hover:bg-[#E8F5E9] rounded text-xs font-semibold">Poland</Link>
-                  <Link href="/countries/germany" className="block px-2 py-2 hover:bg-[#E8F5E9] rounded text-xs font-semibold">Germany</Link>
-                  <Link href="/countries/malta" className="block px-2 py-2 hover:bg-[#E8F5E9] rounded text-xs font-semibold">Malta</Link>
-                  <Link href="/countries/cyprus" className="block px-2 py-2 hover:bg-[#E8F5E9] rounded text-xs font-semibold">Cyprus</Link>
-                  <Link href="/countries/croatia" className="block px-2 py-2 hover:bg-[#E8F5E9] rounded text-xs font-semibold">Croatia</Link>
+                  {COUNTRIES.global.map(c => <Link key={c.href} href={c.href} className="block px-2 py-2 hover:bg-[#E8F5E9] rounded text-xs font-semibold">{c.name}</Link>)}
                 </div>
               </div>
             </div>
@@ -128,151 +149,113 @@ const Navbar = () => {
             </div>
           </nav>
 
-          {/* Open Mobile Menu Hamburger Button */}
-          <button 
-            className="lg:hidden flex flex-col gap-1.5 p-2 z-50 [@media(max-height:450px)]:scale-75"
-            onClick={() => setIsMobileMenuOpen(true)}
-          >
-            <span className="block w-6 h-0.5 bg-white transition-all duration-300" />
-            <span className="block w-6 h-0.5 bg-white transition-all duration-300" />
-            <span className="block w-6 h-0.5 bg-white transition-all duration-300" />
+          {/* Hamburger */}
+          <button className="lg:hidden p-2 z-50 flex flex-col gap-1.5" onClick={() => setIsMobileMenuOpen(true)}>
+            <span className="block w-6 h-0.5 bg-white" />
+            <span className="block w-6 h-0.5 bg-white" />
+            <span className="block w-6 h-0.5 bg-white" />
           </button>
         </div>
       </header>
 
-      {/* FIXED FULL-SCREEN MOBILE MENU OVERLAY */}
-      <div 
-        className={`fixed inset-0 bg-black/98 backdrop-blur-3xl lg:hidden z-[110] flex flex-col transition-all duration-300 ease-in-out ${
-          isMobileMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
-        }`}
-      >
-        {/* Mobile Menu Top Utility Bar (Eliminates the gap and groups CTA + Close Button) */}
-        <div className="w-full flex justify-between items-center px-4 py-4 sm:py-5 border-b border-white/10 bg-[#006837]/20 backdrop-blur-md shrink-0">
-          
-          {/* Logo on the left */}
-          <Link href="/" className="flex items-center gap-2" onClick={() => setIsMobileMenuOpen(false)}>
-            <div className="brightness-0 invert relative w-6 h-6 sm:w-8 sm:h-8">
-              <Image src="/logo.png" alt="Al Zahra Logo" fill className="object-contain" />
-            </div>
-            <div className="flex flex-col">
-              <span className="font-[family-name:var(--font-cinzel)] font-bold text-sm sm:text-base leading-none text-white">Al Zahra</span>
-            </div>
+      {/* MOBILE OVERLAY */}
+      <div className={`fixed inset-0 bg-black/98 backdrop-blur-3xl lg:hidden z-[110] flex flex-col transition-all duration-300 ${isMobileMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
+        <div className="w-full flex justify-between items-center px-4 py-4 border-b border-white/10 bg-[#006837]/20 shrink-0">
+          <Link href="/" className="flex items-center gap-2" onClick={closeMenu}>
+            <div className="brightness-0 invert relative w-6 h-6"><Image src="/logo.png" alt="Logo" fill className="object-contain" /></div>
+            <span className="font-[family-name:var(--font-cinzel)] font-bold text-sm text-white uppercase tracking-tighter">Al Zahra</span>
           </Link>
-          
-          {/* Grouped CTA and Close button on the right */}
-          <div className="flex items-center gap-2 sm:gap-4">
-            <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} className="px-4 py-2 sm:px-5 sm:py-2.5 bg-[#39B54A] text-white rounded-full font-bold uppercase tracking-wider text-[10px] sm:text-xs shadow-[0_0_15px_rgba(57,181,74,0.3)]">
-              Hire Talent
-            </Link>
-            
-            {/* The 'X' Close Button */}
-            <button 
-              className="flex flex-col justify-center items-center p-2 w-8 h-8"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              <span className="block w-6 h-0.5 bg-white rotate-45 translate-y-[1px] absolute"></span>
-              <span className="block w-6 h-0.5 bg-white -rotate-45 translate-y-[1px] absolute"></span>
+          <div className="flex items-center gap-2">
+            <Link href="/contact" onClick={closeMenu} className="px-4 py-2 bg-[#39B54A] text-white rounded-full font-bold uppercase text-[10px]">Hire Talent</Link>
+            <button className="relative w-8 h-8" onClick={closeMenu}>
+              <span className="block w-6 h-0.5 bg-white rotate-45 absolute top-1/2 left-1/2 -translate-x-1/2" />
+              <span className="block w-6 h-0.5 bg-white -rotate-45 absolute top-1/2 left-1/2 -translate-x-1/2" />
             </button>
           </div>
         </div>
 
-        {/* Scrollable Links Section */}
-        <div className="flex-1 overflow-y-auto w-full font-[family-name:var(--font-open-sans)] px-6 py-4">
-          <div className="flex flex-col w-full max-w-lg mx-auto pb-10 gap-1">
-            <Link href="/" onClick={() => setIsMobileMenuOpen(false)} className="text-base sm:text-lg font-bold hover:text-[#39B54A] py-3 border-b border-white/5 uppercase tracking-wide">Home</Link>
-            <Link href="/about" onClick={() => setIsMobileMenuOpen(false)} className="text-base sm:text-lg font-bold hover:text-[#39B54A] py-3 border-b border-white/5 uppercase tracking-wide">About Us</Link>
-            <Link href="/services" onClick={() => setIsMobileMenuOpen(false)} className="text-base sm:text-lg font-bold hover:text-[#39B54A] py-3 border-b border-white/5 uppercase tracking-wide">Services</Link>
+        <div className="flex-1 overflow-y-auto px-6 py-4 font-[family-name:var(--font-open-sans)]">
+          <div className="flex flex-col gap-1 max-w-lg mx-auto pb-10">
+            <MobileLink label="Home" href="/" onClick={closeMenu} />
+            <MobileLink label="About Us" href="/about" onClick={closeMenu} />
+            <MobileLink label="Services" href="/services" onClick={closeMenu} />
             
-            {/* Industries Accordion */}
-            <div className="w-full border-b border-white/5 py-1">
-              <button 
-                onClick={() => toggleAccordion('industries')}
-                className="w-full flex justify-between items-center text-base sm:text-lg font-bold hover:text-[#39B54A] py-2 uppercase tracking-wide text-left"
-              >
-                Industries
-                <span className={`text-[10px] transition-transform duration-300 ${openAccordion === 'industries' ? 'rotate-180' : ''}`}>▼</span>
-              </button>
-              <div className={`overflow-hidden transition-all duration-300 ${openAccordion === 'industries' ? 'max-h-96 opacity-100 mt-2' : 'max-h-0 opacity-0'}`}>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pl-4 pb-2 border-l-2 border-[#39B54A] ml-2">
-                  <Link href="/industries/construction" onClick={() => setIsMobileMenuOpen(false)} className="text-sm font-semibold hover:text-[#39B54A] py-1 text-white/80">Construction</Link>
-                  <Link href="/industries/hospitality" onClick={() => setIsMobileMenuOpen(false)} className="text-sm font-semibold hover:text-[#39B54A] py-1 text-white/80">Hospitality</Link>
-                  <Link href="/industries/healthcare" onClick={() => setIsMobileMenuOpen(false)} className="text-sm font-semibold hover:text-[#39B54A] py-1 text-white/80">Healthcare</Link>
-                  <Link href="/industries/security" onClick={() => setIsMobileMenuOpen(false)} className="text-sm font-semibold hover:text-[#39B54A] py-1 text-white/80">Security</Link>
-                  <Link href="/industries/office-admin" onClick={() => setIsMobileMenuOpen(false)} className="text-sm font-semibold hover:text-[#39B54A] py-1 text-white/80">Office & Admin</Link>
-                  <Link href="/industries/transportation" onClick={() => setIsMobileMenuOpen(false)} className="text-sm font-semibold hover:text-[#39B54A] py-1 text-white/80">Transportation</Link>
-                </div>
+            <MobileAccordion label="Industries" href="/industries" isOpen={openAccordion === 'ind'} onToggle={() => toggleAccordion('ind')} onLinkClick={closeMenu}>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pl-4 border-l-2 border-[#39B54A] ml-2">
+                {INDUSTRIES.map(item => <Link key={item.href} href={item.href} onClick={closeMenu} className="text-sm font-semibold text-white/80 py-1">{item.name}</Link>)}
               </div>
-            </div>
+            </MobileAccordion>
 
-            {/* Offices Accordion */}
-            <div className="w-full border-b border-white/5 py-1">
-              <button 
-                onClick={() => toggleAccordion('offices')}
-                className="w-full flex justify-between items-center text-base sm:text-lg font-bold hover:text-[#39B54A] py-2 uppercase tracking-wide text-left"
-              >
-                Offices
-                <span className={`text-[10px] transition-transform duration-300 ${openAccordion === 'offices' ? 'rotate-180' : ''}`}>▼</span>
-              </button>
-              <div className={`overflow-hidden transition-all duration-300 ${openAccordion === 'offices' ? 'max-h-40 opacity-100 mt-2' : 'max-h-0 opacity-0'}`}>
-                <div className="flex flex-col gap-2 pl-4 pb-2 border-l-2 border-[#39B54A] ml-2">
-                  <Link href="/offices/uae" onClick={() => setIsMobileMenuOpen(false)} className="text-sm font-semibold hover:text-[#39B54A] py-1 text-white/80">United Arab Emirates</Link>
-                  <Link href="/offices/india" onClick={() => setIsMobileMenuOpen(false)} className="text-sm font-semibold hover:text-[#39B54A] py-1 text-white/80">India</Link>
-                  <Link href="/offices/nepal" onClick={() => setIsMobileMenuOpen(false)} className="text-sm font-semibold hover:text-[#39B54A] py-1 text-white/80">Nepal</Link>
-                </div>
+            <MobileAccordion label="Offices" href="/offices" isOpen={openAccordion === 'off'} onToggle={() => toggleAccordion('off')} onLinkClick={closeMenu}>
+              <div className="flex flex-col gap-2 pl-4 border-l-2 border-[#39B54A] ml-2">
+                {OFFICES.map(item => <Link key={item.href} href={item.href} onClick={closeMenu} className="text-sm font-semibold text-white/80 py-1">{item.name}</Link>)}
               </div>
-            </div>
+            </MobileAccordion>
 
-            {/* Countries Accordion */}
-            <div className="w-full border-b border-white/5 py-1">
-              <button 
-                onClick={() => toggleAccordion('countries')}
-                className="w-full flex justify-between items-center text-base sm:text-lg font-bold hover:text-[#39B54A] py-2 uppercase tracking-wide text-left"
-              >
-                Countries we serve
-                <span className={`text-[10px] transition-transform duration-300 ${openAccordion === 'countries' ? 'rotate-180' : ''}`}>▼</span>
-              </button>
-              <div className={`overflow-hidden transition-all duration-300 ${openAccordion === 'countries' ? 'max-h-[800px] opacity-100 mt-2' : 'max-h-0 opacity-0'}`}>
-                <div className="flex flex-col gap-4 pl-4 pb-4 border-l-2 border-[#39B54A] ml-2">
-                  <div>
-                    <span className="text-[#39B54A] font-black text-[10px] mb-2 block">MIDDLE EAST</span>
-                    <div className="grid grid-cols-2 gap-2">
-                      <Link href="/countries/uae" onClick={() => setIsMobileMenuOpen(false)} className="text-sm font-semibold hover:text-white py-1 text-white/70">UAE</Link>
-                      <Link href="/countries/saudi-arabia" onClick={() => setIsMobileMenuOpen(false)} className="text-sm font-semibold hover:text-white py-1 text-white/70">Saudi Arabia</Link>
-                      <Link href="/countries/qatar" onClick={() => setIsMobileMenuOpen(false)} className="text-sm font-semibold hover:text-white py-1 text-white/70">Qatar</Link>
-                      <Link href="/countries/oman" onClick={() => setIsMobileMenuOpen(false)} className="text-sm font-semibold hover:text-white py-1 text-white/70">Oman</Link>
-                      <Link href="/countries/kuwait" onClick={() => setIsMobileMenuOpen(false)} className="text-sm font-semibold hover:text-white py-1 text-white/70">Kuwait</Link>
-                      <Link href="/countries/bahrain" onClick={() => setIsMobileMenuOpen(false)} className="text-sm font-semibold hover:text-white py-1 text-white/70">Bahrain</Link>
-                    </div>
+            <MobileAccordion label="Countries we serve" href="/countries" isOpen={openAccordion === 'count'} onToggle={() => toggleAccordion('count')} onLinkClick={closeMenu}>
+              <div className="flex flex-col gap-4 pl-4 border-l-2 border-[#39B54A] ml-2">
+                <div>
+                  <span className="text-[#39B54A] font-black text-[10px] mb-2 block uppercase tracking-tighter">Middle East</span>
+                  <div className="grid grid-cols-2 gap-2">
+                    {COUNTRIES.middleEast.map(c => <Link key={c.href} href={c.href} onClick={closeMenu} className="text-sm font-semibold text-white/70">{c.short}</Link>)}
                   </div>
-                  <div>
-                    <span className="text-[#39B54A] font-black text-[10px] mb-2 block">EUROPE</span>
-                    <div className="grid grid-cols-2 gap-2">
-                      <Link href="/countries/romania" onClick={() => setIsMobileMenuOpen(false)} className="text-sm font-semibold hover:text-white py-1 text-white/70">Romania</Link>
-                      <Link href="/countries/poland" onClick={() => setIsMobileMenuOpen(false)} className="text-sm font-semibold hover:text-white py-1 text-white/70">Poland</Link>
-                      <Link href="/countries/germany" onClick={() => setIsMobileMenuOpen(false)} className="text-sm font-semibold hover:text-white py-1 text-white/70">Germany</Link>
-                      <Link href="/countries/malta" onClick={() => setIsMobileMenuOpen(false)} className="text-sm font-semibold hover:text-white py-1 text-white/70">Malta</Link>
-                      <Link href="/countries/cyprus" onClick={() => setIsMobileMenuOpen(false)} className="text-sm font-semibold hover:text-white py-1 text-white/70">Cyprus</Link>
-                      <Link href="/countries/croatia" onClick={() => setIsMobileMenuOpen(false)} className="text-sm font-semibold hover:text-white py-1 text-white/70">Croatia</Link>
-                    </div>
+                </div>
+                <div>
+                  <span className="text-[#39B54A] font-black text-[10px] mb-2 block uppercase tracking-tighter">Europe & Global</span>
+                  <div className="grid grid-cols-2 gap-2">
+                    {COUNTRIES.global.map(c => <Link key={c.href} href={c.href} onClick={closeMenu} className="text-sm font-semibold text-white/70">{c.name}</Link>)}
                   </div>
                 </div>
               </div>
-            </div>
+            </MobileAccordion>
 
-            <Link href="/careers" onClick={() => setIsMobileMenuOpen(false)} className="text-base sm:text-lg font-bold hover:text-[#39B54A] py-3 border-b border-white/5 uppercase tracking-wide">Careers</Link>
-            <Link href="/blog" onClick={() => setIsMobileMenuOpen(false)} className="text-base sm:text-lg font-bold hover:text-[#39B54A] py-3 border-b border-white/5 uppercase tracking-wide">Blog</Link>
-            
-            {/* Bottom CTA (Partner With Us) */}
-            <div className="mt-8 mb-4">
-              <Link href="/partner" onClick={() => setIsMobileMenuOpen(false)} className="block w-full py-4 border border-white/30 text-center rounded-lg font-bold hover:bg-white hover:text-black transition-colors text-sm uppercase tracking-widest text-white/80">
-                Partner With Us
-              </Link>
-            </div>
+            <MobileLink label="Careers" href="/careers" onClick={closeMenu} />
+            <MobileLink label="Blog" href="/blog" onClick={closeMenu} />
+            <div className="mt-8"><Link href="/partner" onClick={closeMenu} className="block w-full py-4 border border-white/30 text-center rounded-lg font-bold text-sm uppercase tracking-widest text-white/80">Partner With Us</Link></div>
           </div>
         </div>
       </div>
     </>
   );
 };
+
+// --- SUB-COMPONENTS ---
+
+const Dropdown = ({ label, href, items }: { label: string, href: string, items: { name: string, href: string }[] }) => (
+  <div className="relative group cursor-pointer py-4">
+    <Link href={href} className="hover:text-[#39B54A] transition-colors flex items-center gap-1">
+      {label} <span className="text-[7px] ml-1">▼</span>
+    </Link>
+    <div className="absolute top-full left-0 w-56 bg-white text-[#1B2B21] p-2 rounded-b-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all translate-y-2 group-hover:translate-y-0 border-t-2 border-[#39B54A] text-left">
+      {items.map(item => (
+        <Link key={item.href} href={item.href} className="block px-4 py-3 hover:bg-[#E8F5E9] hover:text-[#006837] rounded transition-colors text-xs font-semibold">
+          {item.name}
+        </Link>
+      ))}
+    </div>
+  </div>
+);
+
+const MobileLink = ({ label, href, onClick }: { label: string, href: string, onClick: () => void }) => (
+  <Link href={href} onClick={onClick} className="text-base font-bold hover:text-[#39B54A] py-3 border-b border-white/5 uppercase tracking-wide text-left">
+    {label}
+  </Link>
+);
+
+const MobileAccordion = ({ label, href, isOpen, onToggle, onLinkClick, children }: { label: string, href: string, isOpen: boolean, onToggle: () => void, onLinkClick: () => void, children: React.ReactNode }) => (
+  <div className="w-full border-b border-white/5 py-1">
+    <div className="w-full flex justify-between items-center py-2">
+      <Link href={href} onClick={onLinkClick} className="text-base font-bold hover:text-[#39B54A] uppercase tracking-wide text-left flex-grow">
+        {label}
+      </Link>
+      <button onClick={onToggle} className="p-2 ml-4">
+        <span className={`text-[10px] block transition-transform ${isOpen ? 'rotate-180' : ''}`}>▼</span>
+      </button>
+    </div>
+    <div className={`overflow-hidden transition-all duration-300 ${isOpen ? 'max-h-[800px] opacity-100 mt-2' : 'max-h-0 opacity-0'}`}>
+      {children}
+    </div>
+  </div>
+);
 
 export default Navbar;

@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { Cinzel, Montserrat, Open_Sans } from "next/font/google";
 import "./globals.css";
-// IMPORT YOUR NEW NAVBAR
+// IMPORT COMPONENTS
 import Navbar from "./components/Navbar"; 
+import Footer from "./components/Footer"; 
 
 const cinzel = Cinzel({ 
   subsets: ["latin"], 
@@ -34,10 +35,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      {/* ADD suppressHydrationWarning HERE */}
-      <body suppressHydrationWarning className={`${cinzel.variable} ${montserrat.variable} ${openSans.variable} font-sans antialiased bg-black text-white`}>
+      <body suppressHydrationWarning className={`${cinzel.variable} ${montserrat.variable} ${openSans.variable} font-sans antialiased bg-black text-white flex flex-col min-h-screen`}>
         <Navbar />
-        {children}
+        {/* Main content wrapper to push footer to the bottom if content is short */}
+        <main className="flex-grow">
+            {children}
+        </main>
+        <Footer />
       </body>
     </html>
   );

@@ -1,10 +1,13 @@
-// app/page.tsx
-import Hero from "./components/Hero"; // Use '@' if you have path aliases set up
-
+import Hero from "./components/Hero";
+import HomeAbout from "./components/HomeAbout";
+import WhyChooseUs from "./components/WhyChooseUs"
 export default function Home() {
   return (
-    <main>
+    <>
       <Hero />
-    </main>
+      <HomeAbout />
+      <WhyChooseUs />
+      {/* Other future sections like Services, Industries will go here */}
+    </>
   );
 }
