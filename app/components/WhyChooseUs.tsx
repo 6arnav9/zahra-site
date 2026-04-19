@@ -3,10 +3,6 @@
 import Image from 'next/image';
 import { useEffect, useState, useRef } from 'react';
 
-// ─── NAVBAR HEIGHT ────────────────────────────────────────────────────────────
-// Match this to your actual sticky navbar height in px.
-const NAVBAR_HEIGHT = 64;
-
 const FEATURES = [
   {
     id: "01",
@@ -60,13 +56,13 @@ const AnimatedCounter = ({
   duration = 2000,
   suffix = "",
   isActive,
-  compact = false,
+  fontSize = "clamp(1.8rem, 4vw, 3.5rem)",
 }: {
   target: number;
   duration?: number;
   suffix?: string;
   isActive: boolean;
-  compact?: boolean;
+  fontSize?: string;
 }) => {
   const [count, setCount] = useState(0);
   const rafRef = useRef<number | null>(null);
@@ -88,33 +84,60 @@ const AnimatedCounter = ({
   return (
     <span
       className="font-black font-[family-name:var(--font-montserrat)] text-white drop-shadow-xl leading-none"
-      style={{ fontSize: compact ? "clamp(1.5rem, 4.5vw, 2.2rem)" : undefined }}
+      style={{ fontSize }}
     >
-      {/* Portrait/desktop uses Tailwind scale; compact (landscape-mobile) uses clamp via style */}
-      {!compact && (
-        <span className="text-4xl sm:text-5xl md:text-6xl">{count}{suffix}</span>
-      )}
-      {compact && <>{count}{suffix}</>}
+      {count}{suffix}
     </span>
   );
 };
 
+// ─── VIEWPORT TIER ───────────────────────────────────────────────────────────
+type ViewportTier = "watch" | "landscapePhone" | "normal";
+function getViewportTier(): ViewportTier {
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+  if (w < 220) return "watch";
+  if (h < 520 && w < 1024) return "landscapePhone";
+  return "normal";
+}
+
 // ─── MAIN COMPONENT ──────────────────────────────────────────────────────────
 const WhyChooseUs = () => {
   const [activeIndex, setActiveIndex] = useState(0);
-  // isShortViewport: true when viewport height < 520px (landscape phones)
-  const [isShortViewport, setIsShortViewport] = useState(false);
+  const [tier, setTier] = useState<ViewportTier>("normal");
+  // KEY FIX: measure the actual navbar height dynamically.
+  // A hardcoded constant like 64px was wrong for iPad landscape where the
+  // desktop navbar + utility bar totals ~90-100px.
+  // We read the real rendered height from the DOM on every resize.
+  const [navHeight, setNavHeight] = useState(64);
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
-    const check = () => setIsShortViewport(window.innerHeight < 520);
-    check();
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
+    const update = () => {
+      setTier(getViewportTier());
+      // Measure the navbar. Navbar.tsx adds id="site-navbar" to the header.
+      const nav = document.getElementById('site-navbar');
+      if (nav) {
+        setNavHeight(nav.getBoundingClientRect().height);
+      }
+    };
+    update();
+    window.addEventListener('resize', update);
+    // Also re-measure after a short delay in case the navbar hydrates late
+    const t = setTimeout(update, 300);
+    return () => {
+      window.removeEventListener('resize', update);
+      clearTimeout(t);
+    };
   }, []);
 
-  // Landscape mobile navbars are typically shorter; clamp so we don't waste space
-  const effectiveNav = isShortViewport ? Math.min(NAVBAR_HEIGHT, 48) : NAVBAR_HEIGHT;
+  const isWatch = tier === "watch";
+  const isLandscapePhone = tier === "landscapePhone";
+
+  // On landscape phones the mobile nav is shorter (~48px)
+  const effectiveNav = isWatch
+    ? 28   // matches the watch navbar height in Navbar.tsx
+    : navHeight;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -134,11 +157,56 @@ const WhyChooseUs = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [effectiveNav]);
 
+  // ── Shared glowing green line (all slides 01–05) ──────────────────────────
+  const GreenLine = () => (
+    <div
+      className="h-[2px] bg-[#39B54A]/80 shadow-[0_0_12px_#39B54A] flex-shrink-0"
+      style={{
+        width: isWatch
+          ? "16px"
+          : isLandscapePhone
+          ? "28px"
+          : "clamp(28px, 4vw, 72px)",
+      }}
+    />
+  );
+
+  // ── Font sizes by tier ────────────────────────────────────────────────────
+  const fs = {
+    // Eyebrow "THE AL ZAHRA ADVANTAGE"
+    // KEY FIX: was clamp(9px,0.75vw,12px) which at 1024px = 7.68px → invisible.
+    // Now minimum is 10px on normal, always legible.
+    eyebrow:    isWatch ? "7px"  : isLandscapePhone ? "8px"  : "clamp(10px, 0.85vw, 12px)",
+    // Main headline "Why Partner With Us."
+    headline:   isWatch ? "10px" : isLandscapePhone ? "clamp(0.85rem, 3.5vw, 1.2rem)" : "clamp(1.4rem, 3vw, 3.25rem)",
+    slideNum:   isWatch ? "1rem" : isLandscapePhone ? "clamp(1.4rem, 5vw, 2.4rem)"    : "clamp(2.25rem, 5.5vw, 4.75rem)",
+    slideTitle: isWatch ? "9px"  : isLandscapePhone ? "clamp(0.85rem, 3vw, 1.4rem)"   : "clamp(1rem, 2.75vw, 2.75rem)",
+    slideBody:  isWatch ? "7px"  : isLandscapePhone ? "11px"                           : "clamp(0.8rem, 1.1vw, 1rem)",
+    statNum:    isWatch ? "clamp(0.9rem, 5.5vw, 1.35rem)" : isLandscapePhone ? "clamp(1.2rem, 3.5vw, 1.8rem)" : "clamp(1.6rem, 3.5vw, 3.25rem)",
+    statLabel:  isWatch ? "6px"  : isLandscapePhone ? "8px"                            : "clamp(8px, 0.7vw, 11px)",
+  };
+
+  const hPad = isWatch ? "6px" : "clamp(1rem, 4vw, 3rem)";
+
+  // Padding to push slide content below the sticky header
+  // = navbar height + header block height (eyebrow + headline) + gap
+  // On watch: nav is 28px + tiny header block ~20px
+  // On landscapePhone: compact header ~32px
+  // On normal: full header ~80-100px (varies by nav height)
+  const cardPaddingTop = isWatch
+    ? effectiveNav + 28
+    : isLandscapePhone
+    ? effectiveNav + 36
+    : effectiveNav + 88;
+
   return (
     <section className="relative w-full bg-[#050505] text-white font-[family-name:var(--font-open-sans)]">
 
       {/* ── STICKY BACKGROUND ──────────────────────────────────────────────── */}
-      <div className="sticky top-0 left-0 w-full overflow-hidden pointer-events-none" style={{ height: "100dvh" }}>
+      <div
+        className="sticky top-0 left-0 w-full overflow-hidden pointer-events-none"
+        style={{ height: "100dvh" }}
+      >
         <div className="absolute inset-0 bg-[#050505] z-0" />
 
         {FEATURES.map((feature, index) => {
@@ -151,7 +219,14 @@ const WhyChooseUs = () => {
                 isActive ? "opacity-50 z-10 scale-100" : "opacity-0 z-0 scale-105"
               }`}
             >
-              <Image src={feature.image} alt={feature.title} fill className="object-cover" unoptimized priority={index === 0} />
+              <Image
+                src={feature.image}
+                alt={feature.title}
+                fill
+                className="object-cover"
+                unoptimized
+                priority={index === 0}
+              />
               <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-black/40 to-[#050505]/90" />
               <div className="absolute inset-0 bg-gradient-to-r from-[#050505] via-black/50 to-transparent" />
             </div>
@@ -169,39 +244,52 @@ const WhyChooseUs = () => {
       {/* ── SCROLLING CONTENT ──────────────────────────────────────────────── */}
       <div className="relative z-10" style={{ marginTop: "-100dvh" }}>
 
-        {/* ── Sticky Header ────────────────────────────────────────────── */}
+        {/* ── Sticky Section Header ─────────────────────────────────────── */}
         {/*
-          In landscape-mobile (isShortViewport) we hide the large headline
-          to recover ~70–80px of precious vertical space. The eyebrow label
-          stays so the section label is still present.
+          z-30 beats the background blob at z-20 — this was the other
+          reason the eyebrow disappeared on iPad.
+
+          top = effectiveNav so it always sits flush below the navbar,
+          using the MEASURED height not a hardcoded guess.
         */}
         <div
-          className="sticky left-0 w-full px-4 sm:px-6 lg:px-12 z-30 pointer-events-none"
-          style={{ top: `${effectiveNav}px`, paddingTop: isShortViewport ? 4 : 24 }}
+          className="sticky left-0 w-full z-30 pointer-events-none"
+          style={{
+            top: `${effectiveNav}px`,
+            paddingTop: isWatch ? 4 : isLandscapePhone ? 6 : 16,
+            paddingLeft: hPad,
+            paddingRight: hPad,
+          }}
         >
           <div className="max-w-7xl mx-auto">
-            <p className="text-[#39B54A] font-bold text-[9px] sm:text-[10px] uppercase tracking-[0.3em] leading-none drop-shadow-md">
+            <p
+              className="text-[#39B54A] font-bold uppercase leading-none drop-shadow-md"
+              style={{
+                fontSize: fs.eyebrow,
+                letterSpacing: isWatch ? "0.12em" : "0.28em",
+              }}
+            >
               The Al Zahra Advantage
             </p>
-            {!isShortViewport && (
-              <p className="mt-1 sm:mt-2 text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-black font-[family-name:var(--font-montserrat)] text-white/95 drop-shadow-2xl leading-tight">
-                Why Partner With Us.
-              </p>
-            )}
+            <p
+              className="font-black font-[family-name:var(--font-montserrat)] text-white/95 drop-shadow-2xl leading-tight"
+              style={{
+                marginTop: isWatch ? 2 : 4,
+                fontSize: fs.headline,
+              }}
+            >
+              Why Partner With Us.
+            </p>
           </div>
         </div>
 
         {/* ── Feature Blocks ───────────────────────────────────────────── */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
+        <div
+          className="max-w-7xl mx-auto"
+          style={{ paddingLeft: hPad, paddingRight: hPad }}
+        >
           {FEATURES.map((feature, index) => {
             const isActive = activeIndex === index;
-
-            // How much top-padding the card needs to clear the sticky header
-            // Portrait: nav + header text ≈ nav + 80px
-            // Landscape-mobile: nav (short) + tiny eyebrow ≈ effectiveNav + 20px
-            const cardPaddingTop = isShortViewport
-              ? effectiveNav + 20
-              : effectiveNav + 72;
 
             return (
               <div
@@ -211,104 +299,112 @@ const WhyChooseUs = () => {
                 style={{
                   minHeight: "100dvh",
                   paddingTop: cardPaddingTop,
-                  paddingBottom: isShortViewport ? 8 : 32,
+                  paddingBottom: isWatch ? 8 : isLandscapePhone ? 8 : 32,
                 }}
               >
                 <div
                   className={`w-full transition-all duration-[800ms] ease-out ${
-                    isActive ? "opacity-100 translate-y-0 blur-none" : "opacity-10 translate-y-12 blur-md pointer-events-none"
+                    isActive
+                      ? "opacity-100 translate-y-0 blur-none"
+                      : "opacity-10 translate-y-12 blur-md pointer-events-none"
                   }`}
                 >
                   {!feature.isStats ? (
 
-                    /* ── Regular feature slide ──────────────────────── */
-                    <div className="max-w-2xl">
-                      {/* Number + decorative line */}
-                      <div className="flex items-center gap-3 mb-2 sm:mb-5">
+                    /* ── Regular Feature Slide ────────────────────────── */
+                    <div style={{ maxWidth: "42rem" }}>
+                      {/* Number + green line */}
+                      <div
+                        className="flex items-center gap-2"
+                        style={{ marginBottom: isWatch ? 3 : isLandscapePhone ? 5 : 12 }}
+                      >
                         <span
                           className="font-black text-transparent bg-clip-text bg-gradient-to-b from-[#39B54A] to-[#006837] font-[family-name:var(--font-montserrat)] drop-shadow-2xl leading-none"
-                          style={{ fontSize: isShortViewport ? "clamp(2rem, 6vw, 2.8rem)" : undefined }}
+                          style={{ fontSize: fs.slideNum }}
                         >
-                          {isShortViewport
-                            ? feature.id
-                            : <span className="text-5xl sm:text-7xl lg:text-8xl">{feature.id}</span>
-                          }
+                          {feature.id}
                         </span>
-                        <div className="w-10 sm:w-20 h-[2px] bg-[#39B54A]/80 shadow-[0_0_15px_#39B54A]" />
+                        <GreenLine />
                       </div>
 
                       {/* Title */}
                       <h3
-                        className="font-bold font-[family-name:var(--font-montserrat)] leading-[1.15] drop-shadow-xl mb-2 sm:mb-5"
-                        style={{ fontSize: isShortViewport ? "clamp(1rem, 3.2vw, 1.5rem)" : undefined }}
+                        className="font-bold font-[family-name:var(--font-montserrat)] leading-[1.15] drop-shadow-xl"
+                        style={{
+                          fontSize: fs.slideTitle,
+                          marginBottom: isWatch ? 3 : isLandscapePhone ? 5 : 14,
+                        }}
                       >
-                        {isShortViewport
-                          ? feature.title
-                          : <span className="text-xl sm:text-3xl md:text-4xl lg:text-5xl">{feature.title}</span>
-                        }
+                        {feature.title}
                       </h3>
 
-                      {/* Description — truncated on landscape to avoid overflow */}
+                      {/* Description */}
                       <p
-                        className="text-white/85 leading-relaxed drop-shadow-md max-w-xl"
+                        className="text-white/85 drop-shadow-md"
                         style={{
-                          fontSize: isShortViewport ? "11px" : undefined,
-                          lineHeight: isShortViewport ? "1.4" : undefined,
-                          // Show only 2 lines on very short screens
-                          display: isShortViewport ? "-webkit-box" : undefined,
-                          WebkitLineClamp: isShortViewport ? 2 : undefined,
-                          WebkitBoxOrient: isShortViewport ? "vertical" : undefined,
-                          overflow: isShortViewport ? "hidden" : undefined,
+                          fontSize: fs.slideBody,
+                          lineHeight: isWatch ? 1.35 : isLandscapePhone ? 1.4 : 1.7,
+                          maxWidth: "34rem",
+                          ...(isWatch || isLandscapePhone
+                            ? {
+                                display: "-webkit-box",
+                                WebkitLineClamp: isWatch ? 3 : 2,
+                                WebkitBoxOrient: "vertical",
+                                overflow: "hidden",
+                              }
+                            : {}),
                         } as React.CSSProperties}
                       >
-                        <span className={isShortViewport ? "" : "text-sm sm:text-base lg:text-lg"}>
-                          {feature.description}
-                        </span>
+                        {feature.description}
                       </p>
                     </div>
 
                   ) : (
 
-                    /* ── Stats slide ────────────────────────────────── */
+                    /* ── Stats Slide (#05) ───────────────────────────── */
                     <div className="w-full">
-                      {/* 05 + divider */}
-                      <div className="flex items-center gap-3 mb-2 sm:mb-5">
+                      {/* 05 + same green line as all other slides */}
+                      <div
+                        className="flex items-center gap-2"
+                        style={{ marginBottom: isWatch ? 3 : isLandscapePhone ? 6 : 14 }}
+                      >
                         <span
-                          className="font-black text-[#39B54A] font-[family-name:var(--font-montserrat)] drop-shadow-[0_0_20px_rgba(57,181,74,0.4)] leading-none"
-                          style={{ fontSize: isShortViewport ? "1.25rem" : undefined }}
+                          className="font-black text-transparent bg-clip-text bg-gradient-to-b from-[#39B54A] to-[#006837] font-[family-name:var(--font-montserrat)] drop-shadow-2xl leading-none"
+                          style={{ fontSize: fs.slideNum }}
                         >
-                          {isShortViewport
-                            ? feature.id
-                            : <span className="text-3xl sm:text-5xl">{feature.id}</span>
-                          }
+                          {feature.id}
                         </span>
-                        <div className="flex-1 h-[1px] bg-white/20" />
+                        <GreenLine />
                       </div>
 
                       {/* Title */}
                       <h3
-                        className="font-black font-[family-name:var(--font-montserrat)] leading-[1.1] drop-shadow-2xl mb-4 sm:mb-10"
-                        style={{ fontSize: isShortViewport ? "clamp(0.95rem, 3vw, 1.35rem)" : undefined }}
+                        className="font-black font-[family-name:var(--font-montserrat)] leading-[1.1] drop-shadow-2xl"
+                        style={{
+                          fontSize: fs.slideTitle,
+                          marginBottom: isWatch ? 8 : isLandscapePhone ? 12 : 28,
+                        }}
                       >
-                        {isShortViewport
-                          ? feature.title
-                          : <span className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl">{feature.title}</span>
-                        }
+                        {feature.title}
                       </h3>
 
                       {/*
-                        Stats grid:
-                        - Portrait + tablet + desktop → 2×2 (grid-cols-2), large numbers
-                        - Landscape-mobile → 4 columns in one row, compact numbers + labels
-                          This way all 4 stats are visible without ANY additional scroll
-                          within the slide.
+                        Stats grid layout:
+                          Watch         → 1 column (stacked), scrollable
+                          LandscapePhone→ 2×2 grid
+                          Normal        → 2×2 grid
                       */}
                       <div
-                        className={`grid w-full ${
-                          isShortViewport
-                            ? "grid-cols-4 gap-x-3 gap-y-1"
-                            : "grid-cols-2 gap-x-8 gap-y-8 sm:gap-x-16 sm:gap-y-12 max-w-2xl"
-                        }`}
+                        style={{
+                          display: "grid",
+                          gridTemplateColumns: isWatch ? "1fr" : "1fr 1fr",
+                          gap: isWatch
+                            ? "6px 0"
+                            : isLandscapePhone
+                            ? "12px 20px"
+                            : "clamp(20px, 3.5vw, 44px) clamp(28px, 5.5vw, 72px)",
+                          maxWidth: isWatch ? "100%" : "38rem",
+                        }}
                       >
                         {[
                           { target: 20,   suffix: "+", duration: 2000, label: "Years of Excellence" },
@@ -316,27 +412,28 @@ const WhyChooseUs = () => {
                           { target: 40,   suffix: "+", duration: 1500, label: "Industries Served" },
                           { target: 100,  suffix: "%", duration: 1000, label: "Ethical Compliance" },
                         ].map((stat) => (
-                          <div key={stat.label} className="flex flex-col gap-1">
+                          <div key={stat.label} className="flex flex-col" style={{ gap: isWatch ? 1 : 3 }}>
                             <AnimatedCounter
                               target={stat.target}
                               suffix={stat.suffix}
                               duration={stat.duration}
                               isActive={isActive}
-                              compact={isShortViewport}
+                              fontSize={fs.statNum}
                             />
                             <span
-                              className="text-[#39B54A] font-bold uppercase tracking-[0.12em] drop-shadow-md leading-tight"
-                              style={{ fontSize: isShortViewport ? "8px" : undefined }}
+                              className="text-[#39B54A] font-bold uppercase leading-tight drop-shadow-md"
+                              style={{
+                                fontSize: fs.statLabel,
+                                letterSpacing: isWatch ? "0.08em" : "0.13em",
+                              }}
                             >
-                              {isShortViewport
-                                ? stat.label
-                                : <span className="text-[9px] sm:text-xs">{stat.label}</span>
-                              }
+                              {stat.label}
                             </span>
                           </div>
                         ))}
                       </div>
                     </div>
+
                   )}
                 </div>
               </div>
@@ -346,7 +443,7 @@ const WhyChooseUs = () => {
       </div>
 
       {/* Bottom breathing room */}
-      <div style={{ height: isShortViewport ? "2rem" : "6rem" }} />
+      <div style={{ height: isWatch ? "1rem" : isLandscapePhone ? "1.5rem" : "5rem" }} />
     </section>
   );
 };
