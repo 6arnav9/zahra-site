@@ -26,12 +26,17 @@ const CLIENT_NAMES = [
   "MERCURY ENG", "STRABAG SE", "REDCO INFRA", "PORR AG", "GULF CIVIL",
 ];
 
-type ViewportTier = "watch" | "landscapePhone" | "normal";
+type ViewportTier = "watch" | "landscapePhone" | "smallPhone" | "normal";
 function getViewportTier(): ViewportTier {
   const w = window.innerWidth;
   const h = window.innerHeight;
+  
   if (w < 220) return "watch";
-  if (h < 520 && w < 1024) return "landscapePhone";
+  // Only classify as landscape if height is small AND width is strictly greater than height
+  if (h < 520 && w > h) return "landscapePhone";
+  // Classify exceptionally narrow portrait screens (like iPhone 5 / SE)
+  if (w <= 380) return "smallPhone";
+  
   return "normal";
 }
 
@@ -67,33 +72,46 @@ const Hero = () => {
 
   const isWatch = tier === "watch";
   const isLandscapePhone = tier === "landscapePhone";
+  const isSmallPhone = tier === "smallPhone";
 
   // ─── Apple Watch layout ───────────────────────────────────────────────────
-  // Navbar on watch is 28px and logo-only. Hero shows a minimal card below it.
   if (isWatch) {
     return (
       <section
-        className="relative w-full flex flex-col items-center justify-center text-center text-white bg-[#050505]"
-        style={{ minHeight: "100dvh", paddingTop: navHeight, padding: `${navHeight}px 8px 8px` }}
+        className="relative w-full flex flex-col items-center justify-center text-center text-white bg-[#050505] overflow-hidden"
+        style={{ minHeight: "100dvh", paddingTop: navHeight, paddingLeft: 8, paddingRight: 8, paddingBottom: 8 }}
       >
-        <div className="absolute inset-0 bg-gradient-to-b from-[#006837]/50 via-[#050505] to-[#050505]" />
-        <div className="relative z-10 flex flex-col items-center" style={{ gap: "6px" }}>
-          <p className="text-[#39B54A] font-bold uppercase" style={{ fontSize: "7px", letterSpacing: "0.18em" }}>
-            Al Zahra Human Resources
-          </p>
+        {/* Apple Watch Background images */}
+        <div className="absolute inset-0 z-0 pointer-events-none" aria-hidden="true">
+          {BACKGROUND_MEDIA.map((media, index) => (
+            <div
+              key={media.src}
+              className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+                index === currentMediaIndex ? 'opacity-100' : 'opacity-0'
+              }`}
+            >
+              <Image src={media.src} alt={media.alt} fill priority={index === 0} className="object-cover object-center" unoptimized />
+            </div>
+          ))}
+          {/* Dark overlays to ensure watch text is legible over the background images */}
+          <div className="absolute inset-0 bg-black/45 z-10" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#006837]/60 via-[#050505]/70 to-[#050505]/95 z-10" />
+        </div>
+
+        <div className="relative z-20 flex flex-col items-center" style={{ gap: "6px" }}>
           <h1
-            className="font-black font-[family-name:var(--font-montserrat)] text-white leading-tight"
+            className="font-black font-[family-name:var(--font-montserrat)] text-white leading-tight drop-shadow-md"
             style={{ fontSize: "clamp(10px, 5vw, 13px)" }}
           >
             Bridging Global Employers with Exceptional Talent.
           </h1>
-          <p className="text-white/65" style={{ fontSize: "7px", lineHeight: 1.4 }}>
+          <p className="text-white/80 drop-shadow-sm" style={{ fontSize: "7px", lineHeight: 1.4 }}>
             High-quality, transparent, and efficient overseas recruitment.
           </p>
           <a
             href="#contact"
             className="bg-[#39B54A] hover:bg-[#006837] text-white font-bold rounded-full font-[family-name:var(--font-montserrat)] transition-colors"
-            style={{ fontSize: "8px", padding: "5px 14px" }}
+            style={{ fontSize: "8px", padding: "5px 14px", marginTop: "4px" }}
           >
             Contact Us
           </a>
@@ -141,8 +159,7 @@ const Hero = () => {
         className="relative z-20 flex-1 flex flex-col items-center justify-center w-full mx-auto min-h-0"
         style={{
           maxWidth: "64rem",
-          // Use measured navbar height so iPad landscape offset is correct
-          paddingTop: isLandscapePhone ? navHeight + 8 : navHeight + 24,
+          paddingTop: isLandscapePhone || isSmallPhone ? navHeight + 8 : navHeight + 24,
           paddingBottom: 16,
           paddingLeft:  "clamp(1rem, 5vw, 2rem)",
           paddingRight: "clamp(1rem, 5vw, 2rem)",
@@ -155,8 +172,10 @@ const Hero = () => {
             style={{
               fontSize: isLandscapePhone
                 ? "clamp(1.1rem, 4.5vw, 1.9rem)"
+                : isSmallPhone
+                ? "clamp(1.4rem, 6vw, 1.8rem)"
                 : "clamp(1.75rem, 6vw, 4.5rem)",
-              marginBottom: isLandscapePhone ? "6px" : "clamp(12px, 2vw, 24px)",
+              marginBottom: isLandscapePhone || isSmallPhone ? "8px" : "clamp(12px, 2vw, 24px)",
             }}
           >
             Bridging Global Employers{" "}
@@ -168,9 +187,9 @@ const Hero = () => {
             <p
               className="text-white/88 max-w-3xl font-[family-name:var(--font-open-sans)] drop-shadow-md"
               style={{
-                fontSize: "clamp(0.8rem, 1.4vw, 1.15rem)",
-                lineHeight: 1.65,
-                marginBottom: "clamp(20px, 3vw, 40px)",
+                fontSize: isSmallPhone ? "0.75rem" : "clamp(0.8rem, 1.4vw, 1.15rem)",
+                lineHeight: isSmallPhone ? 1.4 : 1.65,
+                marginBottom: isSmallPhone ? "16px" : "clamp(20px, 3vw, 40px)",
               }}
             >
               Delivering high-quality, transparent, and efficient recruitment solutions.
@@ -181,13 +200,13 @@ const Hero = () => {
 
           <div
             className="flex items-center justify-center flex-wrap"
-            style={{ gap: isLandscapePhone ? "8px" : "clamp(10px, 2vw, 24px)" }}
+            style={{ gap: isLandscapePhone || isSmallPhone ? "12px" : "clamp(10px, 2vw, 24px)" }}
           >
             <button
               className="bg-[#39B54A] hover:bg-[#006837] text-white font-bold rounded-full transition-all duration-300 font-[family-name:var(--font-montserrat)] whitespace-nowrap shadow-[0_0_20px_rgba(57,181,74,0.3)] hover:shadow-[0_0_30px_rgba(57,181,74,0.5)]"
               style={{
-                fontSize: isLandscapePhone ? "0.65rem" : "clamp(0.8rem, 1.2vw, 1.1rem)",
-                padding: isLandscapePhone ? "6px 20px" : "clamp(10px,1.2vw,16px) clamp(24px,3vw,42px)",
+                fontSize: isLandscapePhone || isSmallPhone ? "0.75rem" : "clamp(0.8rem, 1.2vw, 1.1rem)",
+                padding: isLandscapePhone || isSmallPhone ? "8px 20px" : "clamp(10px,1.2vw,16px) clamp(24px,3vw,42px)",
               }}
             >
               Find Talent
@@ -195,8 +214,8 @@ const Hero = () => {
             <button
               className="bg-transparent hover:bg-white hover:text-[#1B2B21] border border-white/50 hover:border-white text-white font-bold rounded-full transition-all duration-300 font-[family-name:var(--font-montserrat)] whitespace-nowrap shadow-xl"
               style={{
-                fontSize: isLandscapePhone ? "0.65rem" : "clamp(0.8rem, 1.2vw, 1.1rem)",
-                padding: isLandscapePhone ? "6px 20px" : "clamp(10px,1.2vw,16px) clamp(24px,3vw,42px)",
+                fontSize: isLandscapePhone || isSmallPhone ? "0.75rem" : "clamp(0.8rem, 1.2vw, 1.1rem)",
+                padding: isLandscapePhone || isSmallPhone ? "8px 20px" : "clamp(10px,1.2vw,16px) clamp(24px,3vw,42px)",
               }}
             >
               Submit CV
