@@ -3,6 +3,12 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  
+  /* Al Zahra Brand Colors */
+  --color-brand-green: #006837;
+  --color-brand-green-deep: #004d29;
+  --color-brand-green-light: #39B54A;
+  --color-pearl-white: #fdfdfd;
 }
 
 @theme inline {
@@ -10,6 +16,15 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  
+  /* Easings */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  
+  /* Colors */
+  --color-brand-green: var(--color-brand-green);
+  --color-brand-green-deep: var(--color-brand-green-deep);
+  --color-brand-green-light: var(--color-brand-green-light);
+  --color-pearl-white: var(--color-pearl-white);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -22,5 +37,5 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }

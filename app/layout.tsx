@@ -1,14 +1,21 @@
 import type { Metadata } from "next";
-import { Cinzel, Montserrat, Open_Sans } from "next/font/google";
+import { Cormorant_Garamond, Montserrat, Open_Sans, Cinzel } from "next/font/google";
 import "./globals.css";
 // IMPORT COMPONENTS
 import Navbar from "./components/Navbar"; 
 import Footer from "./components/Footer"; 
 
+const cormorant = Cormorant_Garamond({ 
+  subsets: ["latin"], 
+  variable: "--font-cormorant",
+  weight: ["400", "500", "600", "700"],
+  style: ["normal", "italic"],
+});
+
 const cinzel = Cinzel({ 
   subsets: ["latin"], 
   variable: "--font-cinzel",
-  weight: ["400", "700"] 
+  weight: ["400", "700", "800"] 
 });
 
 const montserrat = Montserrat({ 
@@ -24,8 +31,8 @@ const openSans = Open_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Al Zahra HR Consultancy",
-  description: "Global recruitment solutions since 2001",
+  title: "Al Zahra HR | Global Recruitment Authority",
+  description: "Bespoke overseas recruitment solutions for world-class enterprises across the Middle East and Europe.",
 };
 
 export default function RootLayout({
@@ -35,7 +42,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body suppressHydrationWarning className={`${cinzel.variable} ${montserrat.variable} ${openSans.variable} font-sans antialiased bg-black text-white flex flex-col min-h-screen`}>
+      <body suppressHydrationWarning className={`${cormorant.variable} ${cinzel.variable} ${montserrat.variable} ${openSans.variable} font-sans antialiased bg-black text-white flex flex-col min-h-screen`}>
         <Navbar />
         {/* Main content wrapper to push footer to the bottom if content is short */}
         <main className="flex-grow">

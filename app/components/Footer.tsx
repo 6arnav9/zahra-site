@@ -50,185 +50,139 @@ const Footer = () => {
   }, []);
 
   // ── Apple Watch layout ────────────────────────────────────────────────────
-  // At ~162px wide a multi-column grid is impossible. We show a minimal
-  // brand block + two key links + contact line. No social row (icons overflow).
   if (isWatch) {
     return (
       <footer
         className="bg-black text-white font-[family-name:var(--font-open-sans)]"
-        style={{ padding: "12px 8px 10px" }}
+        style={{ padding: "16px 8px" }}
       >
         {/* Brand mark */}
-        <div className="flex items-center gap-1 mb-2">
-          <div className="brightness-0 invert relative flex-shrink-0" style={{ width: 14, height: 14 }}>
+        <div className="flex items-center gap-1 mb-3">
+          <div className="brightness-0 invert relative flex-shrink-0" style={{ width: 12, height: 12 }}>
             <Image src="/logo.png" alt="Al Zahra" fill className="object-contain" />
           </div>
           <span
             className="font-[family-name:var(--font-cinzel)] font-bold text-white leading-none"
-            style={{ fontSize: "8px", letterSpacing: "0.1em" }}
+            style={{ fontSize: "7px", letterSpacing: "0.1em" }}
           >
-            AL ZAHRA HR
+            AL ZAHRA
           </span>
         </div>
 
-        {/* Key links — just the most important two */}
-        <div className="flex flex-col gap-1 mb-2 border-t border-white/10 pt-2">
-          <Link href="/contact" className="text-[#39B54A] font-bold" style={{ fontSize: "7px" }}>Hire Talent</Link>
-          <Link href="/about" className="text-white/60" style={{ fontSize: "7px" }}>About Us</Link>
+        <div className="flex flex-col gap-2 mb-3 border-t border-white/10 pt-3">
+          <Link href="/contact" className="text-[#006837] font-black" style={{ fontSize: "7px" }}>Hire Talent</Link>
+          <Link href="/about" className="text-white/50 font-bold" style={{ fontSize: "7px" }}>About Us</Link>
         </div>
 
-        {/* Contact */}
-        <div className="border-t border-white/10 pt-2">
-          <a href={`tel:${CONTACT_DETAILS.phone.replace(/\s/g, '')}`} className="text-white/50" style={{ fontSize: "6px" }}>
+        <div className="border-t border-white/10 pt-3">
+          <a href={`tel:${CONTACT_DETAILS.phone.replace(/\s/g, '')}`} className="text-white/40" style={{ fontSize: "6px" }}>
             {CONTACT_DETAILS.phone}
           </a>
         </div>
 
-        <p className="text-white/20 mt-2" style={{ fontSize: "6px" }}>
-          © {currentYear} Al Zahra HR
+        <p className="text-white/20 mt-3 font-bold" style={{ fontSize: "5.5px" }}>
+          © {currentYear} Al Zahra
         </p>
       </footer>
     );
   }
 
-  // ── Standard layout ───────────────────────────────────────────────────────
   return (
     <footer className="relative bg-black text-white font-[family-name:var(--font-open-sans)] overflow-hidden">
-
-      {/* Padding: tighter on mobile, generous on desktop */}
-      <div className="pt-10 sm:pt-14 lg:pt-20 pb-8 lg:pb-10 border-t border-white/10">
-
-        {/* Green glow blob */}
+      <div className="pt-12 sm:pt-16 lg:pt-24 pb-8 lg:pb-12 border-t border-white/5">
+        
+        {/* Architectural Glow */}
         <div
-          className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-[300px] lg:h-[400px] bg-[#006837]/20 blur-[120px] rounded-full pointer-events-none opacity-50"
+          className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-[400px] bg-[#006837]/10 blur-[140px] rounded-full pointer-events-none opacity-40"
           aria-hidden="true"
         />
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
-
-          {/*
-            GRID LAYOUT:
-              Mobile (< 640px) → 1 column, all sections stacked
-              sm–md (640–1023px) → 2 columns: Brand+Corporate | Industries+Contact
-                The 2-column pairing is intentional — Brand and Corporate are
-                related (who we are / what we do), Industries and Contact are
-                related (what we cover / how to reach us). Each pair is
-                roughly equal in height.
-              lg+ (≥ 1024px) → 4 columns side by side
-
-            GAP: smaller on mobile (32px) to avoid dead space in 1-col layout,
-            standard on desktop (32px horizontal, tighter than original 48px).
-          */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-x-8 sm:gap-y-10 lg:gap-8 mb-10 lg:mb-16">
+        <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-8 lg:px-16">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 sm:gap-x-10 sm:gap-y-12 lg:gap-16 mb-16 lg:mb-24">
 
             {/* ── Column 1: Brand & Socials ──────────────────────────────── */}
-            <div className="flex flex-col gap-5">
+            <div className="flex flex-col gap-6">
               <Link href="/" className="flex items-center gap-3 group w-fit">
-                <div className="brightness-0 invert relative w-10 h-10 lg:w-12 lg:h-12 group-hover:scale-105 transition-transform duration-300 flex-shrink-0">
+                <div className="brightness-0 invert relative w-10 h-10 lg:w-12 lg:h-12 transition-all duration-500 ease-out-expo group-hover:scale-110 flex-shrink-0">
                   <Image src="/logo.png" alt="Al Zahra" fill className="object-contain" />
                 </div>
                 <div className="flex flex-col">
                   <span className="font-[family-name:var(--font-cinzel)] font-bold text-xl lg:text-2xl leading-none tracking-wide uppercase">
                     Al Zahra
                   </span>
-                  <span className="text-[9px] font-bold tracking-[0.2em] uppercase mt-1 text-white/60">
-                    Human Resources
+                  <span className="text-[9px] font-black tracking-[0.3em] uppercase mt-1 text-white/50">
+                    Authority
                   </span>
                 </div>
               </Link>
 
-              <p className="text-sm text-white/50 leading-relaxed">
-                Bridging global employers with exceptional talent since 2001.
-                Delivering high-quality, transparent, and efficient overseas
-                recruitment solutions.
+              <p className="text-sm text-white/40 leading-relaxed font-medium">
+                Leading the strategic mobilization of global talent since 2001. 
+                Reliability, ethics, and scale at the core of every deployment.
               </p>
 
-              {/*
-                Social icons:
-                  Mobile: w-11 h-11 (44px) — meets Apple HIG minimum tap target
-                  Desktop: w-9 h-9 (36px) — dense enough to look refined
-                  gap-2.5 gives breathing room without spreading too wide
-              */}
-              <div className="flex flex-wrap gap-2.5">
-                <SocialIcon href="#" brand="linkedin" color="hover:bg-[#0077b5] hover:border-[#0077b5]"><LinkedinSVG /></SocialIcon>
-                <SocialIcon href="#" brand="facebook" color="hover:bg-[#1877F2] hover:border-[#1877F2]"><FacebookSVG /></SocialIcon>
-                <SocialIcon href="#" brand="whatsapp" color="hover:bg-[#25D366] hover:border-[#25D366]"><WhatsappSVG /></SocialIcon>
-                <SocialIcon href="#" brand="instagram" color="hover:bg-gradient-to-tr hover:from-[#f09433] hover:via-[#dc2743] hover:to-[#bc1888] hover:border-transparent"><InstagramSVG /></SocialIcon>
-                <SocialIcon href="#" brand="youtube" color="hover:bg-[#FF0000] hover:border-[#FF0000]"><YoutubeSVG /></SocialIcon>
+              <div className="flex flex-wrap gap-3">
+                <SocialIcon href="#" brand="linkedin" color="hover:bg-white hover:text-black"><LinkedinSVG /></SocialIcon>
+                <SocialIcon href="#" brand="facebook" color="hover:bg-white hover:text-black"><FacebookSVG /></SocialIcon>
+                <SocialIcon href="#" brand="whatsapp" color="hover:bg-white hover:text-black"><WhatsappSVG /></SocialIcon>
+                <SocialIcon href="#" brand="instagram" color="hover:bg-white hover:text-black"><InstagramSVG /></SocialIcon>
+                <SocialIcon href="#" brand="youtube" color="hover:bg-white hover:text-black"><YoutubeSVG /></SocialIcon>
               </div>
             </div>
 
             {/* ── Column 2: Corporate links ───────────────────────────────── */}
-            <FooterColumn title="Corporate" links={CORPORATE_LINKS} />
+            <FooterColumn title="The Company" links={CORPORATE_LINKS} />
 
             {/* ── Column 3: Industry links ────────────────────────────────── */}
-            <FooterColumn title="Industries" links={INDUSTRY_LINKS} />
+            <FooterColumn title="Strategic Sectors" links={INDUSTRY_LINKS} />
 
             {/* ── Column 4: Contact & CTAs ─────────────────────────────────── */}
-            <div className="flex flex-col gap-4">
-              <h3 className="text-xs font-bold uppercase tracking-widest text-[#39B54A] font-[family-name:var(--font-montserrat)]">
-                Get In Touch
+            <div className="flex flex-col gap-6">
+              <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-[#006837] font-[family-name:var(--font-open-sans)]">
+                Reach Us
               </h3>
 
-              <div className="flex flex-col gap-3 text-sm text-white/70">
-                {/*
-                  Phone & email: min-height 44px on mobile for touch comfort.
-                  The emoji + text layout naturally hits ~44px with py-2.
-                */}
+              <div className="flex flex-col gap-4 text-sm text-white/60 font-medium">
                 <a
                   href={`tel:${CONTACT_DETAILS.phone.replace(/\s/g, '')}`}
-                  className="hover:text-white transition-colors flex items-center gap-2 py-1"
+                  className="hover:text-white transition-colors duration-300 flex items-center gap-2.5 py-1"
                 >
-                  📞 {CONTACT_DETAILS.phone}
+                  {CONTACT_DETAILS.phone}
                 </a>
                 <a
                   href={`mailto:${CONTACT_DETAILS.email}`}
-                  className="hover:text-white transition-colors flex items-center gap-2 py-1 break-all"
+                  className="hover:text-white transition-colors duration-300 flex items-center gap-2.5 py-1 break-all"
                 >
-                  ✉️ {CONTACT_DETAILS.email}
+                  {CONTACT_DETAILS.email}
                 </a>
-                <p className="text-xs leading-relaxed text-white/40 mt-1">
-                  {CONTACT_DETAILS.address.split(',').slice(0, 2).join(',')},<br />
-                  {CONTACT_DETAILS.address.split(',').slice(2).join(',')}
+                <p className="text-xs leading-relaxed text-white/30 mt-1">
+                  {CONTACT_DETAILS.address}
                 </p>
               </div>
 
-              {/*
-                CTA buttons:
-                  w-full on all sizes — inside a narrow footer column on sm
-                  screens w-fit would make them awkwardly small. Full width
-                  looks intentional and is easier to tap on mobile.
-                  Rounded-lg matches original; text-[11px] unchanged.
-              */}
               <div className="flex flex-col gap-3 mt-2">
                 <Link
                   href="/contact"
-                  className="w-full px-6 py-3.5 bg-[#39B54A] hover:bg-[#006837] text-white text-center font-bold rounded-lg transition-all duration-300 shadow-lg text-[11px] uppercase tracking-widest"
+                  className="w-full px-6 py-4 bg-[#006837] hover:bg-[#004d29] text-white text-center font-black rounded-full transition-all duration-500 ease-out-expo shadow-xl text-[10px] uppercase tracking-widest"
                 >
-                  Hire Talent Now
+                  Hire Talent
                 </Link>
                 <Link
                   href="/partner"
-                  className="w-full px-6 py-3.5 bg-transparent border border-white/20 hover:border-white hover:bg-white hover:text-black text-white text-center font-bold rounded-lg transition-all duration-300 text-[11px] uppercase tracking-widest"
+                  className="w-full px-6 py-4 bg-transparent border border-white/10 hover:border-white hover:bg-white hover:text-black text-white text-center font-black rounded-full transition-all duration-500 ease-out-expo text-[10px] uppercase tracking-widest"
                 >
-                  Partner With Us
+                  Partner
                 </Link>
               </div>
             </div>
 
           </div>
 
-          {/* ── Legal bar ──────────────────────────────────────────────────── */}
-          {/*
-            flex-col always on mobile (text stacks naturally),
-            md:flex-row for side-by-side once there's enough horizontal room.
-            text-center on mobile so the stacked items look intentional.
-          */}
-          <div className="pt-6 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-3 text-[11px] text-white/30 text-center md:text-left">
-            <p>© {currentYear} Al Zahra Human Resources Consultancy. All rights reserved.</p>
-            <div className="flex items-center gap-6">
-              <Link href="/privacy" className="hover:text-white transition-colors whitespace-nowrap">Privacy Policy</Link>
-              <Link href="/terms" className="hover:text-white transition-colors whitespace-nowrap">Terms of Service</Link>
+          <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] text-white/20 text-center md:text-left font-bold uppercase tracking-widest">
+            <p>© {currentYear} Al Zahra Human Resource Consultancy.</p>
+            <div className="flex items-center gap-8">
+              <Link href="/privacy" className="hover:text-white transition-colors duration-300">Privacy</Link>
+              <Link href="/terms" className="hover:text-white transition-colors duration-300">Terms</Link>
             </div>
           </div>
 
@@ -241,24 +195,21 @@ const Footer = () => {
 // ─── SUB-COMPONENTS ──────────────────────────────────────────────────────────
 
 const FooterColumn = ({ title, links }: { title: string; links: { name: string; href: string }[] }) => (
-  <div className="flex flex-col gap-1">
-    <h3 className="text-xs font-bold uppercase tracking-widest text-[#39B54A] mb-3 font-[family-name:var(--font-montserrat)]">
+  <div className="flex flex-col gap-3">
+    <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-[#006837] mb-4 font-[family-name:var(--font-open-sans)]">
       {title}
     </h3>
-    {links.map((link) => (
-      /*
-        Each link: py-2 gives ~40px tap height on mobile (text-sm = 20px + 16px padding).
-        lg:py-1 tightens it up on desktop where mouse precision is fine.
-        w-fit keeps the underline hover state tight to the text.
-      */
-      <Link
-        key={link.href}
-        href={link.href}
-        className="text-sm text-white/50 hover:text-white transition-colors w-fit py-2 lg:py-1"
-      >
-        {link.name}
-      </Link>
-    ))}
+    <div className="flex flex-col gap-2">
+      {links.map((link) => (
+        <Link
+          key={link.href}
+          href={link.href}
+          className="text-sm text-white/40 hover:text-[#006837] transition-all duration-300 w-fit py-1.5 font-medium"
+        >
+          {link.name}
+        </Link>
+      ))}
+    </div>
   </div>
 );
 
@@ -279,14 +230,14 @@ const SocialIcon = ({
     rel="noopener noreferrer"
     aria-label={`Visit our ${brand} page`}
     className={`
-      w-11 h-11 lg:w-9 lg:h-9
-      rounded-full bg-white/5 border border-white/10
+      w-12 h-12 lg:w-10 lg:h-10
+      rounded-full bg-white/5 border border-white/5
       flex items-center justify-center
-      transition-all duration-300 group
+      transition-all duration-500 ease-out-expo group
       ${color}
     `}
   >
-    <span className="text-white group-hover:scale-110 transition-transform duration-300">
+    <span className="group-hover:scale-110 transition-transform duration-500 ease-out-expo">
       {children}
     </span>
   </a>

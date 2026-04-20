@@ -37,7 +37,6 @@ const HomeAbout = () => {
     };
     update();
     window.addEventListener('resize', update);
-    // Re-measure once the navbar has fully hydrated
     const t = setTimeout(update, 300);
     return () => {
       window.removeEventListener('resize', update);
@@ -50,20 +49,12 @@ const HomeAbout = () => {
   const isWatch = tier === "watch";
   const isLandscapePhone = tier === "landscapePhone";
 
-  // ─── APPLE WATCH LAYOUT ────────────────────────────────────────────────────
-  // Watch screen is ~162×197px of usable space (after browser chrome).
-  // The navbar is already rendered above (28px logo-only bar).
-  // Strategy: no image — same reasoning as portrait phones but even more so.
-  // Content = headline + one-line tagline + CTA, all centred.
-  // We use equal top/bottom padding around the centred content so it sits
-  // in the true optical middle of the remaining space below the navbar.
   if (isWatch) {
     return (
       <section
-        className="w-full bg-[#f4f7f6] font-[family-name:var(--font-open-sans)]"
+        className="w-full bg-[#fdfdfd] font-[family-name:var(--font-open-sans)]"
         style={{
           minHeight: "100dvh",
-          // Equal top/bottom padding ensures true vertical centring
           paddingTop: navHeight,
           paddingBottom: navHeight,
           paddingLeft: 8,
@@ -75,107 +66,64 @@ const HomeAbout = () => {
           textAlign: "center",
         }}
       >
-        {/* Thin green accent line above headline — adds brand colour without an image */}
-        <div className="w-8 h-[2px] bg-[#39B54A] mb-2 rounded-full" />
+        <div className="w-8 h-[1px] bg-[#006837] mb-3 opacity-50" />
 
         <h2
-          className="font-black leading-tight font-[family-name:var(--font-montserrat)] text-gray-900 tracking-tight"
-          style={{ fontSize: "clamp(10px, 5vw, 13px)", marginBottom: 4 }}
+          className="font-bold leading-tight font-[family-name:var(--font-cormorant)] italic text-gray-900 tracking-tight"
+          style={{ fontSize: "12px", marginBottom: 6 }}
         >
-          Powering the World's{" "}
-          <span className="text-[#39B54A]">Essential Industries.</span>
+          Powering Global <br/>
+          <span className="text-[#006837] opacity-80">Infrastructure.</span>
         </h2>
 
         <p
-          className="text-gray-500 leading-snug"
-          style={{ fontSize: "7px", marginBottom: 8, maxWidth: "90%" }}
+          className="text-gray-500 leading-snug font-medium"
+          style={{ fontSize: "7px", marginBottom: 10, maxWidth: "90%" }}
         >
-          Since 2001 — skilled workforce for the Middle East &amp; Europe.
+          Since 2001 — High-impact talent for the Middle East & Europe.
         </p>
 
         <Link
           href="/about"
-          className="bg-[#006837] text-white font-bold rounded-full uppercase tracking-wider"
+          className="bg-[#006837] text-white font-black rounded-full uppercase tracking-widest active:scale-95 transition-transform"
           style={{ fontSize: "7px", padding: "5px 12px" }}
         >
-          Learn More →
+          Explore
         </Link>
       </section>
     );
   }
 
   // ─── STANDARD LAYOUT ──────────────────────────────────────────────────────
-  //
-  // CENTRING STRATEGY — why the old code broke:
-  //   Old: section height=100dvh + paddingTop=navHeight
-  //        → inner height = 100dvh - navHeight, content flows from top
-  //        → no true vertical centring; overflows when content is tall
-  //
-  //   New: section min-height=100dvh, inner container uses:
-  //        paddingTop=navHeight (clears navbar)
-  //        paddingBottom=same value (mirrors top, so visual centre = true centre)
-  //        display:flex + align-items:center fills remaining height symmetrically
-  //        All font/image sizes use clamp() with dvh units so they SHRINK
-  //        before the content can ever overflow.
-  //
-  // The image cluster height is the biggest overflow culprit.
-  // It's now capped at `clamp(180px, 42dvh, 520px)` so it always fits
-  // within the available height after the navbar and symmetric padding.
-
-  const hPad = "clamp(1rem, 4vw, 3rem)";
-
-  // Image cluster: portrait phones get less height so text isn't squeezed
-  // Landscape phones: row layout, cluster is height-constrained by viewport
-  // Tablet portrait / desktop: generous but still capped to prevent overflow
+  const hPad = "clamp(1rem, 5vw, 4rem)";
   const clusterMaxH = isLandscapePhone
     ? "clamp(140px, 78dvh, 420px)"
     : "clamp(180px, 38dvh, 520px)";
 
   return (
     <section
-      className="relative w-full bg-[#f4f7f6] text-[#1B2B21] font-[family-name:var(--font-open-sans)] overflow-hidden"
-      // min-height not height — allows breathing room if fonts are huge
-      // but prevents scroll on normal screens.
+      className="relative w-full bg-[#fdfdfd] text-[#1B2B21] font-[family-name:var(--font-open-sans)] overflow-hidden"
       style={{ minHeight: "100dvh" }}
     >
-      {/* Subtle dot pattern */}
+      {/* Subtle architectural grid pattern */}
       <div
-        className="absolute inset-0 opacity-[0.03] pointer-events-none"
-        style={{ backgroundImage: 'radial-gradient(#006837 1px, transparent 1px)', backgroundSize: '24px 24px' }}
+        className="absolute inset-0 opacity-[0.02] pointer-events-none"
+        style={{ backgroundImage: 'radial-gradient(#006837 1px, transparent 1px)', backgroundSize: '32px 32px' }}
       />
 
-      {/*
-        ── MAIN CONTAINER ────────────────────────────────────────────────────
-        Uses flex + justify-center + align-items-center to TRULY centre.
-        paddingTop = navHeight     ← clears the fixed navbar
-        paddingBottom = navHeight  ← mirrors top so visual centre = real centre
-        paddingLeft/Right = standard content inset
-
-        On landscape phones paddingBottom is smaller (mobile nav is shorter
-        and we have less vertical room to spare).
-      */}
       <div
         className="relative z-10 w-full flex flex-col justify-center"
         style={{
           minHeight: "100dvh",
           paddingTop: navHeight,
-          // Mirror the top padding so content is optically centred.
-          // On landscape phone we use a smaller bottom pad since height is tight.
           paddingBottom: isLandscapePhone ? Math.round(navHeight * 0.6) : navHeight,
           paddingLeft: hPad,
           paddingRight: hPad,
         }}
       >
         <div className="w-full max-w-7xl mx-auto flex items-center justify-center" style={{ flex: 1 }}>
-          {/*
-            ROW vs COLUMN layout:
-              landscapePhone → always side-by-side (row), 55/45 split
-              portrait phone → stacked (column)
-              tablet portrait → stacked until lg breakpoint
-              lg+ (tablet landscape, desktop) → side-by-side via lg:flex-row
-          */}
           <div
-            className={`w-full flex gap-[clamp(1rem,3vw,3rem)] ${
+            className={`w-full flex gap-[clamp(1.5rem,5vw,5rem)] ${
               isLandscapePhone
                 ? "flex-row items-center"
                 : "flex-col lg:flex-row items-center"
@@ -185,66 +133,64 @@ const HomeAbout = () => {
             {/* ── LEFT: NARRATIVE ─────────────────────────────────────────── */}
             <div
               className={`flex flex-col items-start ${
-                isLandscapePhone ? "w-[55%]" : "w-full lg:w-1/2"
+                isLandscapePhone ? "w-[55%]" : "w-full lg:w-[52%]"
               }`}
-              style={{ gap: "clamp(0.5rem, 1.8dvh, 1.5rem)" }}
+              style={{ gap: "clamp(0.75rem, 2.5dvh, 2rem)" }}
             >
+              <div className="overflow-hidden">
+                <span className="block text-[10px] font-black tracking-[0.4em] uppercase text-[#006837]/60 mb-2">
+                  Establishment
+                </span>
+              </div>
+
               <h2
-                className="font-black leading-[1.05] font-[family-name:var(--font-montserrat)] text-gray-900 tracking-tight"
+                className="font-medium leading-[1.05] font-[family-name:var(--font-cormorant)] italic text-gray-900 tracking-tight"
                 style={{
-                  // Width-fluid but also height-aware: shrinks on short screens
                   fontSize: isLandscapePhone
-                    ? "clamp(1rem, 3.5vw, 2rem)"
-                    : "clamp(1.5rem, 4vw + 0.25dvh, 3.5rem)",
+                    ? "clamp(1.2rem, 4vw, 2.2rem)"
+                    : "clamp(1.75rem, 5vw + 0.5dvh, 4rem)",
                 }}
               >
-                Powering the World's{" "}
-                <br className={isLandscapePhone ? "hidden" : "inline"} />
-                <span className="text-[#39B54A]">Essential Industries.</span>
+                Powering the World's <br className={isLandscapePhone ? "hidden" : "inline"} />
+                <span className="text-[#006837]">Essential Industries.</span>
               </h2>
 
               <p
-                className="text-gray-600"
+                className="text-gray-600/90 font-medium leading-relaxed"
                 style={{
                   fontSize: isLandscapePhone
-                    ? "clamp(0.65rem, 1.2vw, 0.95rem)"
-                    : "clamp(0.75rem, 1.4vw + 0.1dvh, 1.1rem)",
-                  lineHeight: 1.55,
+                    ? "clamp(0.7rem, 1.4vw, 1rem)"
+                    : "clamp(0.85rem, 1.5vw, 1.15rem)",
                 }}
               >
-                Since 2001, Al Zahra has gone beyond filling desks. We deploy the
-                highly skilled, ethical, and resilient workforce required to build
-                infrastructure, run healthcare systems, and manage global supply chains.
+                Since 2001, Al Zahra has transitioned beyond traditional recruitment. 
+                We architect the workforce strategy required to sustain infrastructure, 
+                healthcare, and global commerce.
               </p>
 
-              {/* Second paragraph — hidden on landscape phone to save height */}
               {!isLandscapePhone && (
                 <p
-                  className="text-gray-600"
+                  className="text-gray-500 font-medium leading-relaxed hidden sm:block"
                   style={{
-                    fontSize: "clamp(0.75rem, 1.4vw + 0.1dvh, 1.1rem)",
-                    lineHeight: 1.55,
+                    fontSize: "clamp(0.85rem, 1.2vw, 1.05rem)",
                   }}
                 >
-                  Operating out of{" "}
-                  <strong className="text-[#006837]">Dubai, India, and Nepal</strong>,
-                  Mr. Ashish Kumar Singh and our expert team bridge the gap between
-                  massive global projects across the Middle East & Europe, and the
-                  frontline talent that brings them to life.
+                  Operating as a bridge between frontline talent and global enterprise, 
+                  we deliver reliability at an institutional scale.
                 </p>
               )}
 
-              {/* Sector pills — hidden on landscape phone */}
+              {/* Sector pills */}
               {!isLandscapePhone && (
-                <div className="flex flex-wrap" style={{ gap: "clamp(5px, 0.8vw, 10px)" }}>
+                <div className="flex flex-wrap" style={{ gap: "10px" }}>
                   {SECTORS.map((sector) => (
                     <Link
                       key={sector.name}
                       href={sector.href}
-                      className="bg-white border border-gray-200 rounded-full font-bold text-gray-700 uppercase tracking-wider shadow-sm hover:border-[#39B54A] hover:text-[#006837] transition-all whitespace-nowrap"
+                      className="bg-white border border-black/5 rounded-full font-bold text-[#006837]/70 uppercase tracking-widest shadow-sm hover:border-[#006837] hover:text-[#006837] transition-all duration-300 whitespace-nowrap"
                       style={{
-                        fontSize: "clamp(0.55rem, 0.85vw, 0.72rem)",
-                        padding: "clamp(4px, 0.8dvh, 8px) clamp(10px, 1.5vw, 16px)",
+                        fontSize: "clamp(0.6rem, 0.8vw, 0.75rem)",
+                        padding: "8px 18px",
                       }}
                     >
                       {sector.name}
@@ -253,101 +199,68 @@ const HomeAbout = () => {
                 </div>
               )}
 
-              {/* CTA */}
               <Link
                 href="/about"
-                className="group flex items-center bg-[#006837] hover:bg-[#39B54A] text-white font-bold rounded-full transition-all duration-300 shadow-xl uppercase tracking-widest w-fit"
+                className="group flex items-center bg-[#006837] hover:bg-[#004d29] text-white font-black rounded-full transition-all duration-500 ease-out-expo shadow-2xl uppercase tracking-[0.2em] w-fit"
                 style={{
-                  gap: "8px",
+                  gap: "12px",
                   fontSize: isLandscapePhone
-                    ? "clamp(0.55rem, 1vw, 0.8rem)"
-                    : "clamp(0.6rem, 0.9vw + 0.1dvh, 0.875rem)",
+                    ? "clamp(0.65rem, 1.2vw, 0.85rem)"
+                    : "clamp(0.75rem, 1vw, 0.9rem)",
                   padding: isLandscapePhone
-                    ? "clamp(6px, 1dvh, 10px) clamp(14px, 2vw, 24px)"
-                    : "clamp(8px, 1.4dvh, 16px) clamp(16px, 3vw, 32px)",
+                    ? "10px 24px"
+                    : "16px 42px",
                 }}
               >
-                Learn About Us
-                <span className="group-hover:translate-x-2 transition-transform duration-300">→</span>
+                Our Authority
+                <span className="group-hover:translate-x-2 transition-transform duration-500 ease-out-expo">→</span>
               </Link>
             </div>
 
             {/* ── RIGHT: IMAGE CLUSTER ────────────────────────────────────── */}
-            {/*
-              The cluster uses a FIXED MAX HEIGHT derived from dvh so it can
-              never be taller than the available viewport space.
-              aspect-ratio keeps proportions correct as width shrinks.
-              On portrait mobile the cluster is hidden at small heights to
-              ensure the text always fits — it's revealed from md: upward.
-            */}
             <div
               className={`relative flex justify-center items-center ${
-                isLandscapePhone ? "w-[45%]" : "w-full lg:w-1/2 hidden sm:flex"
+                isLandscapePhone ? "w-[45%]" : "w-full lg:w-[48%] hidden sm:flex"
               }`}
             >
-              {/* Green glow blob */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 h-3/4 bg-[#39B54A]/15 blur-[60px] rounded-full pointer-events-none" />
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[#006837]/5 blur-[80px] rounded-full pointer-events-none" />
 
-              {/*
-                Cluster wrapper:
-                  Width = 100% of its column
-                  Height = clamp(dvh-based) so it never overflows
-                  aspect-ratio = 4/3 for landscape-phone (square-ish)
-                             = 4/5 for portrait/desktop (taller)
-              */}
               <div
                 className="relative w-full"
                 style={{
                   maxHeight: clusterMaxH,
-                  // Aspect ratio drives the width-height relationship.
-                  // We use style not class so it's always applied.
                   aspectRatio: isLandscapePhone ? "1 / 1" : "4 / 5",
-                  maxWidth: isLandscapePhone ? "100%" : "clamp(280px, 42vw, 500px)",
+                  maxWidth: isLandscapePhone ? "100%" : "clamp(320px, 45vw, 540px)",
                 }}
               >
 
-                {/* Image 1: Civil & Engineering — large bottom-right anchor */}
-                <div className="absolute right-0 bottom-0 w-[75%] h-[75%] rounded-xl lg:rounded-2xl overflow-hidden shadow-2xl border-4 border-[#f4f7f6] z-10 group bg-gray-200">
+                {/* Image 1: Civil & Engineering */}
+                <div className="absolute right-0 bottom-0 w-[80%] h-[80%] rounded-2xl overflow-hidden shadow-2xl border-[6px] border-white z-10 group bg-gray-100">
                   <Image
                     src="https://images.pexels.com/photos/585419/pexels-photo-585419.jpeg?auto=compress&cs=tinysrgb&w=800"
                     alt="Civil and Engineering" fill
-                    className="object-cover group-hover:scale-110 transition-transform duration-1000"
+                    className="object-cover group-hover:scale-110 transition-transform duration-1000 grayscale hover:grayscale-0"
                     unoptimized
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-500" />
-                  <div className="absolute bottom-2 left-2 lg:bottom-5 lg:left-5">
-                    <p className="text-[#39B54A] font-bold tracking-widest uppercase mb-0.5" style={{ fontSize: "clamp(0.35rem, 0.9vw, 0.7rem)" }}>Sector Focus</p>
-                    <p className="text-white font-[family-name:var(--font-montserrat)] font-bold leading-tight" style={{ fontSize: "clamp(0.6rem, 1.8vw, 1.4rem)" }}>Civil & Engineering</p>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-80" />
+                  <div className="absolute bottom-4 left-4 lg:bottom-8 lg:left-8">
+                    <p className="text-white/80 font-bold tracking-[0.2em] uppercase mb-1" style={{ fontSize: "clamp(0.4rem, 0.8vw, 0.75rem)" }}>Institutional</p>
+                    <p className="text-white font-[family-name:var(--font-cormorant)] italic font-medium leading-tight" style={{ fontSize: "clamp(1rem, 2.5vw, 1.8rem)" }}>Civil & Engineering</p>
                   </div>
                 </div>
 
-                {/* Image 2: Hospitality — top-left overlay */}
-                <div className="absolute left-0 top-0 w-[55%] h-[45%] rounded-xl lg:rounded-2xl overflow-hidden shadow-xl border-4 border-[#f4f7f6] z-20 group bg-gray-200">
+                {/* Image 2: Hospitality */}
+                <div className="absolute left-0 top-0 w-[55%] h-[50%] rounded-2xl overflow-hidden shadow-xl border-[6px] border-white z-20 group bg-gray-100">
                   <Image
                     src="https://images.unsplash.com/photo-1559339352-11d035aa65de?q=80&w=1740&auto=format&fit=crop"
                     alt="Hospitality and Catering" fill
-                    className="object-cover group-hover:scale-110 transition-transform duration-1000"
+                    className="object-cover group-hover:scale-110 transition-transform duration-1000 grayscale hover:grayscale-0"
                     unoptimized
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/10 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-500" />
-                  <div className="absolute bottom-1.5 left-1.5 lg:bottom-4 lg:left-4">
-                    <p className="text-[#39B54A] font-bold tracking-widest uppercase mb-0.5" style={{ fontSize: "clamp(0.25rem, 0.7vw, 0.55rem)" }}>Sector Focus</p>
-                    <p className="text-white font-[family-name:var(--font-montserrat)] font-bold leading-tight" style={{ fontSize: "clamp(0.45rem, 1.3vw, 0.95rem)" }}>Hospitality &<br />Catering</p>
-                  </div>
-                </div>
-
-                {/* Image 3: Logistics — mid-left floating card */}
-                <div className="absolute left-[5%] bottom-[15%] w-[45%] h-[35%] rounded-xl lg:rounded-2xl overflow-hidden shadow-xl border-4 border-[#f4f7f6] z-30 group bg-gray-200">
-                  <Image
-                    src="https://images.pexels.com/photos/1267338/pexels-photo-1267338.jpeg?auto=compress&cs=tinysrgb&w=800"
-                    alt="Logistics and Supply Chain" fill
-                    className="object-cover group-hover:scale-110 transition-transform duration-1000"
-                    unoptimized
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/10 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-500" />
-                  <div className="absolute bottom-1.5 left-1.5 lg:bottom-4 lg:left-4">
-                    <p className="text-[#39B54A] font-bold tracking-widest uppercase mb-0.5" style={{ fontSize: "clamp(0.25rem, 0.7vw, 0.55rem)" }}>Sector Focus</p>
-                    <p className="text-white font-[family-name:var(--font-montserrat)] font-bold leading-tight" style={{ fontSize: "clamp(0.4rem, 1.1vw, 0.9rem)" }}>Logistics &<br />Supply Chain</p>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-80" />
+                  <div className="absolute bottom-3 left-3 lg:bottom-6 lg:left-6">
+                    <p className="text-white/80 font-bold tracking-[0.2em] uppercase mb-1" style={{ fontSize: "clamp(0.35rem, 0.7vw, 0.65rem)" }}>Luxury</p>
+                    <p className="text-white font-[family-name:var(--font-cormorant)] italic font-medium leading-tight" style={{ fontSize: "clamp(0.8rem, 1.8vw, 1.4rem)" }}>Hospitality & Excellence</p>
                   </div>
                 </div>
 

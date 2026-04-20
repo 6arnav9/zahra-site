@@ -101,7 +101,6 @@ function getViewportTier(): ViewportTier {
   const w = window.innerWidth;
   const h = window.innerHeight;
   if (w < 220) return "watch";
-  // landscapePhone covers short viewports typical of rotated mobile devices
   if (h < 520 && w < 1024) return "landscapePhone";
   return "normal";
 }
@@ -155,7 +154,7 @@ const WhyChooseUs = () => {
 
   const GreenLine = () => (
     <div
-      className="h-[2px] bg-[#39B54A]/80 shadow-[0_0_12px_#39B54A] flex-shrink-0"
+      className="h-[1px] bg-[#006837] opacity-60 flex-shrink-0"
       style={{
         width: isWatch
           ? "16px"
@@ -167,27 +166,26 @@ const WhyChooseUs = () => {
   );
 
   const fs = {
-    eyebrow:    isWatch ? "7px"  : isLandscapePhone ? "9px"  : "clamp(10px, 0.85vw, 12px)",
-    headline:   isWatch ? "10px" : isLandscapePhone ? "clamp(1rem, 4vw, 1.4rem)" : "clamp(1.4rem, 3vw, 3.25rem)",
-    slideNum:   isWatch ? "1rem" : isLandscapePhone ? "clamp(1.6rem, 6vw, 2.6rem)"    : "clamp(2.25rem, 5.5vw, 4.75rem)",
-    slideTitle: isWatch ? "9px"  : isLandscapePhone ? "clamp(1rem, 3.5vw, 1.6rem)"   : "clamp(1rem, 2.75vw, 2.75rem)",
-    slideBody:  isWatch ? "7px"  : isLandscapePhone ? "12px"                           : "clamp(0.8rem, 1.1vw, 1rem)",
-    statNum:    isWatch ? "clamp(0.9rem, 5.5vw, 1.35rem)" : isLandscapePhone ? "clamp(1.4rem, 4vw, 2rem)" : "clamp(1.6rem, 3.5vw, 3.25rem)",
-    statLabel:  isWatch ? "6px"  : isLandscapePhone ? "9px"                            : "clamp(8px, 0.7vw, 11px)",
+    eyebrow:    isWatch ? "7px"  : isLandscapePhone ? "9px"  : "clamp(10px, 0.8vw, 11px)",
+    headline:   isWatch ? "10px" : isLandscapePhone ? "clamp(1rem, 4vw, 1.6rem)" : "clamp(1.4rem, 3.5vw, 3.5rem)",
+    slideNum:   isWatch ? "1rem" : isLandscapePhone ? "clamp(1.6rem, 6vw, 2.6rem)"    : "clamp(2rem, 5vw, 4.5rem)",
+    slideTitle: isWatch ? "9px"  : isLandscapePhone ? "clamp(1rem, 3.5vw, 1.8rem)"   : "clamp(1.5rem, 3vw, 3rem)",
+    slideBody:  isWatch ? "7px"  : isLandscapePhone ? "12px"                           : "clamp(0.85rem, 1.2vw, 1.1rem)",
+    statNum:    isWatch ? "clamp(0.9rem, 5.5vw, 1.35rem)" : isLandscapePhone ? "clamp(1.4rem, 4vw, 2.2rem)" : "clamp(2rem, 4vw, 3.5rem)",
+    statLabel:  isWatch ? "6px"  : isLandscapePhone ? "9px"                            : "clamp(8px, 0.7vw, 10px)",
   };
 
-  // RESPONSIVITY FIX: Increased padding for landscape to avoid "cornered" look
   const hPad = isWatch 
-    ? "6px" 
+    ? "8px" 
     : isLandscapePhone 
-    ? "clamp(2rem, 8vw, 4rem)" 
-    : "clamp(1.5rem, 5vw, 3rem)";
+    ? "clamp(2rem, 8vw, 5rem)" 
+    : "clamp(1.5rem, 6vw, 4rem)";
 
   const cardPaddingTop = isWatch
-    ? effectiveNav + 28
+    ? effectiveNav + 24
     : isLandscapePhone
-    ? effectiveNav + 48 
-    : effectiveNav + 88;
+    ? effectiveNav + 40 
+    : effectiveNav + 80;
 
   return (
     <section className="relative w-full bg-[#050505] text-white font-[family-name:var(--font-open-sans)]">
@@ -205,27 +203,27 @@ const WhyChooseUs = () => {
           return (
             <div
               key={`bg-${feature.id}`}
-              className={`absolute inset-0 transition-all duration-[1000ms] ease-in-out origin-center ${
-                isActive ? "opacity-50 z-10 scale-100" : "opacity-0 z-0 scale-105"
+              className={`absolute inset-0 transition-all duration-[1500ms] ease-out-expo origin-center ${
+                isActive ? "opacity-40 z-10 scale-100" : "opacity-0 z-0 scale-110"
               }`}
             >
               <Image
                 src={feature.image}
                 alt={feature.title}
                 fill
-                className="object-cover"
+                className="object-cover grayscale"
                 unoptimized
                 priority={index === 0}
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-black/40 to-[#050505]/90" />
-              <div className="absolute inset-0 bg-gradient-to-r from-[#050505] via-black/50 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-black/30 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-r from-[#050505] via-black/40 to-transparent" />
             </div>
           );
         })}
 
         <div
-          className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-5xl rounded-full blur-[120px] transition-colors duration-1000 z-20 ${
-            FEATURES[activeIndex]?.isStats ? "bg-[#39B54A]/20" : "bg-transparent"
+          className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-5xl rounded-full blur-[140px] transition-colors duration-[1500ms] ease-out-expo z-20 ${
+            FEATURES[activeIndex]?.isStats ? "bg-[#006837]/15" : "bg-transparent"
           }`}
           style={{ height: "80dvh" }}
         />
@@ -239,29 +237,26 @@ const WhyChooseUs = () => {
           className="sticky left-0 w-full z-30 pointer-events-none"
           style={{
             top: `${effectiveNav}px`,
-            paddingTop: isWatch ? 4 : isLandscapePhone ? 16 : 24, // Fixed: more top room for landscape
+            paddingTop: isWatch ? 4 : isLandscapePhone ? 12 : 24,
             paddingLeft: hPad,
             paddingRight: hPad,
           }}
         >
           <div className="max-w-7xl mx-auto">
             <p
-              className="text-[#39B54A] font-bold uppercase leading-none drop-shadow-md"
-              style={{
-                fontSize: fs.eyebrow,
-                letterSpacing: isWatch ? "0.12em" : "0.3em",
-              }}
+              className="text-[#006837] font-black uppercase leading-none tracking-[0.4em]"
+              style={{ fontSize: fs.eyebrow }}
             >
-              The Al Zahra Advantage
+              Excellence
             </p>
             <p
-              className="font-black font-[family-name:var(--font-montserrat)] text-white/95 drop-shadow-2xl leading-tight"
+              className="font-medium font-[family-name:var(--font-cormorant)] italic text-white/95 drop-shadow-2xl leading-tight"
               style={{
-                marginTop: isWatch ? 2 : 6,
+                marginTop: isWatch ? 2 : 8,
                 fontSize: fs.headline,
               }}
             >
-              Why Partner With Us.
+              The Al Zahra Advantage.
             </p>
           </div>
         </div>
@@ -282,25 +277,25 @@ const WhyChooseUs = () => {
                 style={{
                   minHeight: "100dvh",
                   paddingTop: cardPaddingTop,
-                  paddingBottom: isWatch ? 8 : isLandscapePhone ? 12 : 32,
+                  paddingBottom: isWatch ? 8 : isLandscapePhone ? 12 : 48,
                 }}
               >
                 <div
-                  className={`w-full transition-all duration-[800ms] ease-out ${
+                  className={`w-full transition-all duration-[1200ms] ease-out-expo ${
                     isActive
                       ? "opacity-100 translate-y-0 blur-none"
-                      : "opacity-10 translate-y-12 blur-md pointer-events-none"
+                      : "opacity-0 translate-y-16 blur-xl pointer-events-none"
                   }`}
                 >
                   {!feature.isStats ? (
 
-                    <div style={{ maxWidth: "42rem" }}>
+                    <div style={{ maxWidth: "48rem" }}>
                       <div
-                        className="flex items-center gap-2"
-                        style={{ marginBottom: isWatch ? 3 : isLandscapePhone ? 8 : 12 }}
+                        className="flex items-center gap-3"
+                        style={{ marginBottom: isWatch ? 4 : isLandscapePhone ? 10 : 20 }}
                       >
                         <span
-                          className="font-black text-transparent bg-clip-text bg-gradient-to-b from-[#39B54A] to-[#006837] font-[family-name:var(--font-montserrat)] drop-shadow-2xl leading-none"
+                          className="font-black text-[#006837] font-[family-name:var(--font-open-sans)] drop-shadow-2xl leading-none tracking-tighter"
                           style={{ fontSize: fs.slideNum }}
                         >
                           {feature.id}
@@ -309,21 +304,20 @@ const WhyChooseUs = () => {
                       </div>
 
                       <h3
-                        className="font-bold font-[family-name:var(--font-montserrat)] leading-[1.15] drop-shadow-xl"
+                        className="font-medium font-[family-name:var(--font-cormorant)] italic leading-[1.1] text-white"
                         style={{
                           fontSize: fs.slideTitle,
-                          marginBottom: isWatch ? 3 : isLandscapePhone ? 8 : 14,
+                          marginBottom: isWatch ? 4 : isLandscapePhone ? 10 : 20,
                         }}
                       >
                         {feature.title}
                       </h3>
 
                       <p
-                        className="text-white/85 drop-shadow-md"
+                        className="text-white/70 font-medium leading-relaxed"
                         style={{
                           fontSize: fs.slideBody,
-                          lineHeight: isWatch ? 1.35 : isLandscapePhone ? 1.5 : 1.7,
-                          maxWidth: "34rem",
+                          maxWidth: "38rem",
                         } as React.CSSProperties}
                       >
                         {feature.description}
@@ -335,11 +329,11 @@ const WhyChooseUs = () => {
                     /* ── Stats Slide (#05) ───────────────────────────── */
                     <div className="w-full">
                       <div
-                        className="flex items-center gap-2"
-                        style={{ marginBottom: isWatch ? 3 : isLandscapePhone ? 8 : 14 }}
+                        className="flex items-center gap-4"
+                        style={{ marginBottom: isWatch ? 4 : isLandscapePhone ? 12 : 24 }}
                       >
                         <span
-                          className="font-black text-transparent bg-clip-text bg-gradient-to-b from-[#39B54A] to-[#006837] font-[family-name:var(--font-montserrat)] drop-shadow-2xl leading-none"
+                          className="font-black text-[#006837] font-[family-name:var(--font-open-sans)] drop-shadow-2xl leading-none tracking-tighter"
                           style={{ fontSize: fs.slideNum }}
                         >
                           {feature.id}
@@ -348,10 +342,10 @@ const WhyChooseUs = () => {
                       </div>
 
                       <h3
-                        className="font-black font-[family-name:var(--font-montserrat)] leading-[1.1] drop-shadow-2xl"
+                        className="font-medium font-[family-name:var(--font-cormorant)] italic leading-[1.1] text-white"
                         style={{
                           fontSize: fs.slideTitle,
-                          marginBottom: isWatch ? 8 : isLandscapePhone ? 14 : 28,
+                          marginBottom: isWatch ? 8 : isLandscapePhone ? 20 : 48,
                         }}
                       >
                         {feature.title}
@@ -362,20 +356,20 @@ const WhyChooseUs = () => {
                           display: "grid",
                           gridTemplateColumns: isWatch ? "1fr" : "1fr 1fr",
                           gap: isWatch
-                            ? "6px 0"
+                            ? "8px 0"
                             : isLandscapePhone
-                            ? "16px 24px"
-                            : "clamp(20px, 3.5vw, 44px) clamp(28px, 5.5vw, 72px)",
-                          maxWidth: isWatch ? "100%" : "38rem",
+                            ? "20px 32px"
+                            : "clamp(32px, 5vw, 64px) clamp(40px, 8vw, 96px)",
+                          maxWidth: isWatch ? "100%" : "44rem",
                         }}
                       >
                         {[
-                          { target: 20,   suffix: "+", duration: 2000, label: "Years of Excellence" },
-                          { target: 5000, suffix: "+", duration: 2500, label: "Global Deployments" },
-                          { target: 40,   suffix: "+", duration: 1500, label: "Industries Served" },
-                          { target: 100,  suffix: "%", duration: 1000, label: "Ethical Compliance" },
+                          { target: 20,   suffix: "+", duration: 2000, label: "Years of Authority" },
+                          { target: 5000, suffix: "+", duration: 2500, label: "Strategic Deployments" },
+                          { target: 40,   suffix: "+", duration: 1500, label: "Specialized Sectors" },
+                          { target: 100,  suffix: "%", duration: 1000, label: "Compliant Ethics" },
                         ].map((stat) => (
-                          <div key={stat.label} className="flex flex-col" style={{ gap: isWatch ? 1 : 4 }}>
+                          <div key={stat.label} className="flex flex-col" style={{ gap: isWatch ? 1 : 6 }}>
                             <AnimatedCounter
                               target={stat.target}
                               suffix={stat.suffix}
@@ -384,10 +378,9 @@ const WhyChooseUs = () => {
                               fontSize={fs.statNum}
                             />
                             <span
-                              className="text-[#39B54A] font-bold uppercase leading-tight drop-shadow-md"
+                              className="text-[#006837] font-black uppercase leading-tight tracking-[0.2em]"
                               style={{
                                 fontSize: fs.statLabel,
-                                letterSpacing: isWatch ? "0.08em" : "0.15em",
                               }}
                             >
                               {stat.label}
@@ -403,7 +396,7 @@ const WhyChooseUs = () => {
           })}
         </div>
       </div>
-      <div style={{ height: isWatch ? "1rem" : isLandscapePhone ? "2rem" : "5rem" }} />
+      <div style={{ height: isWatch ? "2rem" : isLandscapePhone ? "3rem" : "8rem" }} />
     </section>
   );
 };

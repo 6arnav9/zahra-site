@@ -104,30 +104,30 @@ const Navbar = () => {
         
         {/* Desktop Top Utility Bar (Hidden on small screens) */}
         {!isWatch && !isSmallPhone && (
-          <div className={`hidden lg:flex justify-center items-center w-full pb-2 mb-2 border-b border-white/10 text-xs font-[family-name:var(--font-open-sans)] transition-all duration-300 ${isScrolled ? 'hidden' : 'flex'}`}>
-            <div className="flex items-center gap-2 opacity-90 font-semibold tracking-wide">
-              <span className="text-[#39B54A]">Interested? Contact us now:</span>
-              <a href={CONTACT_INFO.phoneLink} className="hover:text-[#39B54A] transition-colors flex items-center gap-1">📞 {CONTACT_INFO.phone}</a>
-              <span className="text-white/30 px-2">|</span>
-              <a href={CONTACT_INFO.emailLink} className="hover:text-[#39B54A] transition-colors flex items-center gap-1">✉️ {CONTACT_INFO.email}</a>
+          <div className={`hidden lg:flex justify-center items-center w-full pb-2 mb-2 border-b border-white/5 text-[10px] tracking-[0.1em] font-medium transition-all duration-500 ease-out-expo ${isScrolled ? 'hidden' : 'flex'}`}>
+            <div className="flex items-center gap-4 opacity-80 uppercase">
+              <span className="text-[#006837] font-bold">Contact:</span>
+              <a href={CONTACT_INFO.phoneLink} className="hover:text-white transition-colors duration-300 flex items-center gap-1.5">{CONTACT_INFO.phone}</a>
+              <span className="text-white/20">/</span>
+              <a href={CONTACT_INFO.emailLink} className="hover:text-white transition-colors duration-300 flex items-center gap-1.5">{CONTACT_INFO.email}</a>
             </div>
           </div>
         )}
 
         {/* Main Navigation Bar */}
-        <div className={`w-full flex justify-between items-center relative z-20 ${isWatch ? 'px-2' : 'px-4 lg:px-6 xl:px-12'}`}>
+        <div className={`w-full flex justify-between items-center relative z-20 ${isWatch ? 'px-2' : 'px-4 lg:px-8 xl:px-16'}`}>
           
           {/* Logo Area */}
-          <Link href="/" className="flex items-center gap-1 sm:gap-2 group flex-none">
-            <div className={`brightness-0 invert relative group-hover:scale-105 transition-transform ${isWatch ? 'w-5 h-5' : 'w-7 h-7 lg:w-8 lg:h-8 xl:w-10 xl:h-10'}`}>
+          <Link href="/" className="flex items-center gap-2 sm:gap-3 group flex-none">
+            <div className={`brightness-0 invert relative transition-all duration-500 ease-out-expo group-hover:scale-110 ${isWatch ? 'w-5 h-5' : 'w-7 h-7 lg:w-9 lg:h-9 xl:w-11 xl:h-11'}`}>
               <Image src="/logo.png" alt="Al Zahra Logo" fill className="object-contain" />
             </div>
             <div className="flex flex-col">
-              <span className={`font-[family-name:var(--font-cinzel)] font-bold leading-none tracking-wide text-white ${isWatch ? 'text-[10px]' : 'text-base lg:text-base xl:text-xl'}`}>
+              <span className={`font-[family-name:var(--font-cinzel)] font-bold leading-none tracking-[0.05em] text-white ${isWatch ? 'text-[10px]' : 'text-base lg:text-lg xl:text-2xl'}`}>
                 Al Zahra
               </span>
               {!isWatch && (
-                <span className="text-[6px] lg:text-[6px] xl:text-[8px] font-bold tracking-[0.2em] uppercase mt-0.5 text-white/80">
+                <span className="text-[6px] lg:text-[7px] xl:text-[9px] font-bold tracking-[0.25em] uppercase mt-1 text-white/70">
                   Human Resources
                 </span>
               )}
@@ -135,38 +135,65 @@ const Navbar = () => {
           </Link>
           
           {/* Desktop Links (Hidden on mobile) */}
-          <nav className="hidden lg:flex items-center gap-3 xl:gap-6 text-[10px] xl:text-[11px] uppercase font-bold tracking-wider font-[family-name:var(--font-open-sans)] whitespace-nowrap">
-            <Link href="/" className="hover:text-[#39B54A] transition-colors py-4">Home</Link>
-            <Link href="/about" className="hover:text-[#39B54A] transition-colors py-4">About Us</Link>
-            <Link href="/services" className="hover:text-[#39B54A] transition-colors py-4">Services</Link>
+          <nav className="hidden lg:flex items-center gap-4 xl:gap-8 text-[10px] xl:text-[11px] uppercase font-bold tracking-[0.15em] whitespace-nowrap">
+            <Link href="/" className="hover:text-[#006837] transition-colors duration-300 py-4 relative group/link">
+              Home
+              <span className="absolute bottom-3 left-0 w-0 h-[1px] bg-[#006837] transition-all duration-300 group-hover/link:w-full" />
+            </Link>
+            <Link href="/about" className="hover:text-[#006837] transition-colors duration-300 py-4 relative group/link">
+              About Us
+              <span className="absolute bottom-3 left-0 w-0 h-[1px] bg-[#006837] transition-all duration-300 group-hover/link:w-full" />
+            </Link>
+            <Link href="/services" className="hover:text-[#006837] transition-colors duration-300 py-4 relative group/link">
+              Services
+              <span className="absolute bottom-3 left-0 w-0 h-[1px] bg-[#006837] transition-all duration-300 group-hover/link:w-full" />
+            </Link>
             
             <Dropdown label="Industries" href="/industries" items={INDUSTRIES} />
             <Dropdown label="Offices" href="/offices" items={OFFICES} />
             
             <div className="relative group cursor-pointer py-4">
-              <Link href="/countries" className="hover:text-[#39B54A] transition-colors flex items-center gap-1">
-                Countries <span className="text-[7px] ml-1">▼</span>
+              <Link href="/countries" className="hover:text-[#006837] transition-colors duration-300 flex items-center gap-1.5 group/link">
+                Countries <span className="text-[7px] opacity-40 group-hover:rotate-180 transition-transform duration-300">▼</span>
               </Link>
-               <div className="absolute top-full -left-[100px] xl:left-0 w-[400px] bg-white text-[#1B2B21] p-4 rounded-b-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all translate-y-2 group-hover:translate-y-0 border-t-2 border-[#39B54A] flex gap-4">
+               <div className="absolute top-full -left-[120px] xl:left-0 w-[440px] bg-[#fdfdfd] text-[#1B2B21] p-6 rounded-b-xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-500 ease-out-expo translate-y-4 group-hover:translate-y-0 border border-black/5 flex gap-6">
                 <div className="flex-1 text-left">
-                  <span className="text-[#006837] font-black text-[10px] mb-2 block border-b pb-1">MIDDLE EAST</span>
-                  {COUNTRIES.middleEast.map(c => <Link key={c.href} href={c.href} className="block px-2 py-2 hover:bg-[#E8F5E9] rounded text-xs font-semibold">{c.name}</Link>)}
+                  <span className="text-[#006837] font-black text-[9px] mb-4 block tracking-[0.2em] border-b border-black/5 pb-2 uppercase">Middle East</span>
+                  <div className="flex flex-col gap-1">
+                    {COUNTRIES.middleEast.map(c => (
+                      <Link key={c.href} href={c.href} className="block px-3 py-2 hover:bg-[#006837]/5 hover:text-[#006837] rounded-lg text-xs font-bold transition-all duration-200">
+                        {c.name}
+                      </Link>
+                    ))}
+                  </div>
                 </div>
-                <div className="flex-1 border-l pl-4 text-left">
-                  <span className="text-[#006837] font-black text-[10px] mb-2 block border-b pb-1">EUROPE & GLOBAL</span>
-                  {COUNTRIES.global.map(c => <Link key={c.href} href={c.href} className="block px-2 py-2 hover:bg-[#E8F5E9] rounded text-xs font-semibold">{c.name}</Link>)}
+                <div className="flex-1 border-l border-black/5 pl-6 text-left">
+                  <span className="text-[#006837] font-black text-[9px] mb-4 block tracking-[0.2em] border-b border-black/5 pb-2 uppercase">Europe & Global</span>
+                  <div className="flex flex-col gap-1">
+                    {COUNTRIES.global.map(c => (
+                      <Link key={c.href} href={c.href} className="block px-3 py-2 hover:bg-[#006837]/5 hover:text-[#006837] rounded-lg text-xs font-bold transition-all duration-200">
+                        {c.name}
+                      </Link>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
 
-            <Link href="/careers" className="hover:text-[#39B54A] transition-colors py-4">Careers</Link>
-            <Link href="/blog" className="hover:text-[#39B54A] transition-colors py-4 pr-3 xl:pr-4 border-r border-white/20">Blog</Link>
+            <Link href="/careers" className="hover:text-[#006837] transition-colors duration-300 py-4 relative group/link">
+              Careers
+              <span className="absolute bottom-3 left-0 w-0 h-[1px] bg-[#006837] transition-all duration-300 group-hover/link:w-full" />
+            </Link>
+            <Link href="/blog" className="hover:text-[#006837] transition-colors duration-300 py-4 pr-4 border-r border-white/10 relative group/link">
+              Blog
+              <span className="absolute bottom-3 left-0 w-0 h-[1px] bg-[#006837] transition-all duration-300 group-hover/link:w-full" />
+            </Link>
             
-            <div className="flex items-center gap-2 xl:gap-3 pl-1 xl:pl-2">
-              <Link href="/partner" className="px-3 xl:px-5 py-2 xl:py-2.5 bg-transparent border border-white hover:bg-white hover:text-[#1B2B21] rounded-full transition-all duration-300 text-[9px] xl:text-[10px] font-bold whitespace-nowrap">
-                Partner With Us
+            <div className="flex items-center gap-3 xl:gap-4 pl-2 xl:pl-4">
+              <Link href="/partner" className="px-5 xl:px-7 py-2.5 xl:py-3 border border-white/30 hover:border-white hover:bg-white hover:text-[#006837] rounded-full transition-all duration-500 ease-out-expo text-[9px] xl:text-[10px] font-black tracking-widest uppercase">
+                Partner
               </Link>
-              <Link href="/contact" className="px-3 xl:px-5 py-2 xl:py-2.5 bg-[#39B54A] hover:bg-[#006837] text-white rounded-full transition-all duration-300 shadow-lg hover:shadow-xl text-[9px] xl:text-[10px] font-bold whitespace-nowrap">
+              <Link href="/contact" className="px-5 xl:px-7 py-2.5 xl:py-3 bg-[#006837] hover:bg-[#004d29] text-white rounded-full transition-all duration-500 ease-out-expo shadow-lg hover:shadow-2xl hover:-translate-y-0.5 text-[9px] xl:text-[10px] font-black tracking-widest uppercase">
                 Hire Talent
               </Link>
             </div>
@@ -196,7 +223,7 @@ const Navbar = () => {
           </Link>
           <div className="flex items-center gap-2">
             {!isWatch && (
-              <Link href="/contact" onClick={closeMenu} className={`bg-[#39B54A] text-white rounded-full font-bold uppercase ${isSmallPhone ? 'px-3 py-1.5 text-[8px]' : 'px-4 py-2 text-[10px]'}`}>Hire</Link>
+              <Link href="/contact" onClick={closeMenu} className={`bg-[#006837] text-white rounded-full font-bold uppercase ${isSmallPhone ? 'px-3 py-1.5 text-[8px]' : 'px-4 py-2 text-[10px]'}`}>Hire</Link>
             )}
             <button className="relative w-6 h-6 sm:w-8 sm:h-8" onClick={closeMenu}>
               <span className="block w-4 sm:w-6 h-[1px] sm:h-0.5 bg-white rotate-45 absolute top-1/2 left-1/2 -translate-x-1/2" />
@@ -213,27 +240,27 @@ const Navbar = () => {
             <MobileLink label="Services" href="/services" onClick={closeMenu} tier={tier} />
             
             <MobileAccordion label="Industries" href="/industries" isOpen={openAccordion === 'ind'} onToggle={() => toggleAccordion('ind')} onLinkClick={closeMenu} tier={tier}>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 pl-3 border-l-[1px] border-[#39B54A] ml-1">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 pl-3 border-l-[1px] border-[#006837] ml-1">
                 {INDUSTRIES.map(item => <Link key={item.href} href={item.href} onClick={closeMenu} className={`${isWatch ? 'text-[8px]' : isSmallPhone ? 'text-[10px]' : 'text-xs sm:text-sm'} font-semibold text-white/80 py-1`}>{item.name}</Link>)}
               </div>
             </MobileAccordion>
 
             <MobileAccordion label="Offices" href="/offices" isOpen={openAccordion === 'off'} onToggle={() => toggleAccordion('off')} onLinkClick={closeMenu} tier={tier}>
-              <div className="flex flex-col gap-1 pl-3 border-l-[1px] border-[#39B54A] ml-1">
+              <div className="flex flex-col gap-1 pl-3 border-l-[1px] border-[#006837] ml-1">
                 {OFFICES.map(item => <Link key={item.href} href={item.href} onClick={closeMenu} className={`${isWatch ? 'text-[8px]' : isSmallPhone ? 'text-[10px]' : 'text-xs sm:text-sm'} font-semibold text-white/80 py-1`}>{item.name}</Link>)}
               </div>
             </MobileAccordion>
 
             <MobileAccordion label="Countries" href="/countries" isOpen={openAccordion === 'count'} onToggle={() => toggleAccordion('count')} onLinkClick={closeMenu} tier={tier}>
-              <div className="flex flex-col gap-2 pl-3 border-l-[1px] border-[#39B54A] ml-1">
+              <div className="flex flex-col gap-2 pl-3 border-l-[1px] border-[#006837] ml-1">
                 <div>
-                  <span className="text-[#39B54A] font-black text-[8px] mb-1 block uppercase tracking-tighter">Middle East</span>
+                  <span className="text-[#006837] font-black text-[8px] mb-1 block uppercase tracking-tighter">Middle East</span>
                   <div className="grid grid-cols-2 gap-1">
                     {COUNTRIES.middleEast.map(c => <Link key={c.href} href={c.href} onClick={closeMenu} className={`${isWatch ? 'text-[7px]' : isSmallPhone ? 'text-[9px]' : 'text-[11px] sm:text-xs'} font-semibold text-white/70`}>{c.short}</Link>)}
                   </div>
                 </div>
                 <div>
-                  <span className="text-[#39B54A] font-black text-[8px] mb-1 block uppercase tracking-tighter">Global</span>
+                  <span className="text-[#006837] font-black text-[8px] mb-1 block uppercase tracking-tighter">Global</span>
                   <div className="grid grid-cols-2 gap-1">
                     {COUNTRIES.global.map(c => <Link key={c.href} href={c.href} onClick={closeMenu} className={`${isWatch ? 'text-[7px]' : isSmallPhone ? 'text-[9px]' : 'text-[11px] sm:text-xs'} font-semibold text-white/70`}>{c.name}</Link>)}
                   </div>
@@ -259,12 +286,12 @@ const Navbar = () => {
 // ─── SUB-COMPONENTS ────────────────────────────────────────────────────────
 const Dropdown = ({ label, href, items }: { label: string, href: string, items: { name: string, href: string }[] }) => (
   <div className="relative group cursor-pointer py-4">
-    <Link href={href} className="hover:text-[#39B54A] transition-colors flex items-center gap-1">
-      {label} <span className="text-[7px] ml-1">▼</span>
+    <Link href={href} className="hover:text-[#006837] transition-colors duration-300 flex items-center gap-1.5 group/link">
+      {label} <span className="text-[7px] opacity-40 group-hover:rotate-180 transition-transform duration-300">▼</span>
     </Link>
-    <div className="absolute top-full left-0 w-56 bg-white text-[#1B2B21] p-2 rounded-b-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all translate-y-2 group-hover:translate-y-0 border-t-2 border-[#39B54A] text-left">
+    <div className="absolute top-full left-0 w-64 bg-[#fdfdfd] text-[#1B2B21] p-3 rounded-b-xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-500 ease-out-expo translate-y-4 group-hover:translate-y-0 border border-black/5 text-left">
       {items.map(item => (
-        <Link key={item.href} href={item.href} className="block px-4 py-3 hover:bg-[#E8F5E9] hover:text-[#006837] rounded transition-colors text-xs font-semibold">
+        <Link key={item.href} href={item.href} className="block px-4 py-3 hover:bg-[#006837]/5 hover:text-[#006837] rounded-lg transition-all duration-200 text-xs font-bold">
           {item.name}
         </Link>
       ))}
@@ -276,10 +303,10 @@ const MobileLink = ({ label, href, onClick, tier }: { label: string, href: strin
   const isWatch = tier === "watch";
   const isSmallPhone = tier === "smallPhone";
   const fontSize = isWatch ? 'text-[9px]' : isSmallPhone ? 'text-[11px]' : 'text-sm sm:text-base';
-  const padding = isWatch ? 'py-2' : isSmallPhone ? 'py-2.5' : 'py-3';
+  const padding = isWatch ? 'py-3' : isSmallPhone ? 'py-4' : 'py-5';
   
   return (
-    <Link href={href} onClick={onClick} className={`font-bold hover:text-[#39B54A] border-b border-white/5 uppercase tracking-wide text-left ${fontSize} ${padding}`}>
+    <Link href={href} onClick={onClick} className={`font-bold hover:text-[#006837] border-b border-white/5 uppercase tracking-[0.1em] text-left transition-colors duration-300 ${fontSize} ${padding}`}>
       {label}
     </Link>
   );
@@ -292,15 +319,15 @@ const MobileAccordion = ({ label, href, isOpen, onToggle, onLinkClick, children,
   
   return (
     <div className="w-full border-b border-white/5 py-1">
-      <div className="w-full flex justify-between items-center py-1">
-        <Link href={href} onClick={onLinkClick} className={`font-bold hover:text-[#39B54A] uppercase tracking-wide text-left flex-grow ${fontSize}`}>
+      <div className="w-full flex justify-between items-center py-2">
+        <Link href={href} onClick={onLinkClick} className={`font-bold hover:text-[#006837] uppercase tracking-[0.1em] text-left flex-grow transition-colors duration-300 ${fontSize}`}>
           {label}
         </Link>
-        <button onClick={onToggle} className="p-1 ml-2">
-          <span className={`transition-transform block ${isOpen ? 'rotate-180' : ''} ${isWatch ? 'text-[7px]' : 'text-[10px]'}`}>▼</span>
+        <button onClick={onToggle} className="p-2 ml-4">
+          <span className={`transition-transform duration-500 ease-out-expo block ${isOpen ? 'rotate-180' : ''} ${isWatch ? 'text-[8px]' : 'text-[11px]'}`}>▼</span>
         </button>
       </div>
-      <div className={`overflow-hidden transition-all duration-300 ${isOpen ? 'max-h-[800px] opacity-100 mt-1' : 'max-h-0 opacity-0'}`}>
+      <div className={`overflow-hidden transition-all duration-500 ease-out-expo ${isOpen ? 'max-h-[800px] opacity-100 mb-4' : 'max-h-0 opacity-0'}`}>
         {children}
       </div>
     </div>
