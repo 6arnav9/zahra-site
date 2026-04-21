@@ -2,15 +2,15 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 // ─── DATA ─────────────────────────────────────────────────────────────────────
 const INDUSTRIES = [
   {
     id: "01",
     name: "Construction & Civil",
-    shortName: "Construction",
-    description: "Site supervisors, civil engineers, heavy equipment operators and unskilled labour for infrastructure mega-projects.",
+    shortName: "Infrastructure",
+    description: "Architecting nations with site supervisors, engineers, and heavy infrastructure talent.",
     href: "/industries/construction",
     image: "https://images.pexels.com/photos/585419/pexels-photo-585419.jpeg?auto=compress&cs=tinysrgb&w=800",
   },
@@ -18,7 +18,7 @@ const INDUSTRIES = [
     id: "02",
     name: "Hospitality & Catering",
     shortName: "Hospitality",
-    description: "Premium frontline staff for luxury resorts, hotels and large-scale catering operations across the Gulf.",
+    description: "Premium frontline staff for luxury resorts and large-scale catering operations.",
     href: "/industries/hospitality",
     image: "https://images.unsplash.com/photo-1559339352-11d035aa65de?q=80&w=1740&auto=format&fit=crop",
   },
@@ -26,7 +26,7 @@ const INDUSTRIES = [
     id: "03",
     name: "Healthcare & Medical",
     shortName: "Healthcare",
-    description: "Qualified nurses, paramedics and support staff for hospitals, clinics and care facilities.",
+    description: "Strategic mobilization of nurses, paramedics, and medical support staff.",
     href: "/industries/healthcare",
     image: "https://images.pexels.com/photos/3825586/pexels-photo-3825586.jpeg?auto=compress&cs=tinysrgb&w=800",
   },
@@ -34,362 +34,257 @@ const INDUSTRIES = [
     id: "04",
     name: "Security Services",
     shortName: "Security",
-    description: "Vetted and trained security personnel for corporate, residential and event protection.",
+    description: "Vetted and trained personnel for institutional and corporate protection.",
     href: "/industries/security",
     image: "https://images.pexels.com/photos/2422280/pexels-photo-2422280.jpeg?auto=compress&cs=tinysrgb&w=800",
   },
   {
     id: "05",
     name: "Office & Admin",
-    shortName: "Office & Admin",
-    description: "Reliable administrative professionals, receptionists and back-office support for corporate environments.",
+    shortName: "Corporate",
+    description: "Reliable administrative professionals and back-office support for enterprises.",
     href: "/industries/office-admin",
     image: "https://images.pexels.com/photos/1181396/pexels-photo-1181396.jpeg?auto=compress&cs=tinysrgb&w=800",
   },
   {
     id: "06",
     name: "Transportation",
-    shortName: "Transport",
-    description: "Heavy-vehicle drivers, fleet coordinators and logistics managers keeping global supply chains moving.",
+    shortName: "Logistics",
+    description: "Keeping global supply chains moving with fleet coordinators and logistics managers.",
     href: "/industries/transportation",
     image: "https://images.pexels.com/photos/1267338/pexels-photo-1267338.jpeg?auto=compress&cs=tinysrgb&w=800",
   },
 ];
 
-type LayoutTier = "watch" | "landscapePhone" | "portraitMobile" | "desktop";
-
-function getLayoutTier(): LayoutTier {
+// ─── VIEWPORT TIER ───────────────────────────────────────────────────────────
+type ViewportTier = "watch" | "phone" | "landscape" | "tablet" | "desktop";
+function getViewportTier(): ViewportTier {
   if (typeof window === 'undefined') return "desktop";
   const w = window.innerWidth;
   const h = window.innerHeight;
-  if (w < 220) return "watch";
-  if (h < 520 && w < 1024) return "landscapePhone";
-  if (w < 768) return "portraitMobile";
+  if (w < 250) return "watch";
+  if (h < 500 && w > h) return "landscape";
+  if (w < 640) return "phone";
+  if (w < 1024) return "tablet";
   return "desktop";
 }
 
-const AccordionCard = ({ industry }: { industry: typeof INDUSTRIES[0] }) => {
-  const [hovered, setHovered] = useState(false);
-
-  return (
-    <Link
-      href={industry.href}
-      className="group relative overflow-hidden flex-shrink-0"
-      style={{
-        flexBasis: hovered ? "32%" : "12.5%",
-        flexGrow: hovered ? 1 : 0,
-        transition: "flex-basis 0.6s cubic-bezier(0.16, 1, 0.3, 1), flex-grow 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
-        borderRadius: "16px",
-        height: "100%",
-        minWidth: 0,
-      }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
-      <Image
-        src={industry.image}
-        alt={industry.name}
-        fill
-        className="object-cover transition-transform duration-1000 group-hover:scale-[1.08] grayscale group-hover:grayscale-0"
-        unoptimized
-      />
-
-      <div
-        className="absolute inset-0 transition-opacity duration-700"
-        style={{
-          background: "linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.4) 40%, rgba(0,0,0,0.1) 100%)",
-          opacity: hovered ? 0.7 : 0.85,
-        }}
-      />
-
-      <div className="absolute top-6 left-6 z-10">
-        <span
-          className="font-black font-[family-name:var(--font-open-sans)] transition-all duration-500 tracking-[0.2em]"
-          style={{
-            fontSize: "clamp(0.65rem, 0.8vw, 0.75rem)",
-            color: hovered ? "#006837" : "rgba(255,255,255,0.4)",
-            transform: hovered ? "translateY(-2px)" : "none",
-          }}
-        >
-          {industry.id}
-        </span>
-      </div>
-
-      <div className="absolute bottom-0 left-0 right-0 z-10 p-6 flex flex-col">
-        <h3
-          className="font-medium font-[family-name:var(--font-cormorant)] italic text-white leading-tight transition-all duration-500"
-          style={{
-            fontSize: hovered ? "clamp(1.2rem, 1.8vw, 2rem)" : "clamp(0.8rem, 1.1vw, 1.1rem)",
-            writingMode: hovered ? "horizontal-tb" : "vertical-rl",
-            transform: hovered ? "none" : "rotate(180deg)",
-            alignSelf: hovered ? "flex-start" : "center",
-            marginBottom: hovered ? "12px" : "0",
-            whiteSpace: hovered ? "normal" : "nowrap",
-          }}
-        >
-          {industry.name}
-        </h3>
-
-        <div
-          style={{
-            maxHeight: hovered ? "100px" : "0px",
-            opacity: hovered ? 1 : 0,
-            overflow: "hidden",
-            transition: "max-height 0.5s ease, opacity 0.4s ease",
-          }}
-        >
-          <p
-            className="text-white/80 font-medium leading-relaxed mb-4"
-            style={{ fontSize: "clamp(0.75rem, 0.9vw, 0.9rem)" }}
-          >
-            {industry.description}
-          </p>
-        </div>
-
-        <div
-          className="flex items-center gap-2 text-white font-black uppercase transition-all duration-500"
-          style={{
-            fontSize: "9px",
-            letterSpacing: "0.3em",
-            opacity: hovered ? 1 : 0,
-            transform: hovered ? "translateY(0)" : "translateY(10px)",
-          }}
-        >
-          Discover
-          <span
-            className="inline-block transition-transform duration-500"
-            style={{ transform: hovered ? "translateX(4px)" : "none" }}
-          >
-            →
-          </span>
-        </div>
-      </div>
-    </Link>
-  );
-};
-
-const CompactCard = ({ industry }: { industry: typeof INDUSTRIES[0] }) => (
-  <Link
-    href={industry.href}
-    className="group relative overflow-hidden rounded-xl flex items-end"
-    style={{ height: "clamp(120px, 25vw, 180px)" }}
-  >
-    <Image
-      src={industry.image}
-      alt={industry.name}
-      fill
-      className="object-cover transition-transform duration-1000 group-hover:scale-110 grayscale group-hover:grayscale-0"
-      unoptimized
-    />
-    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
-    <div className="absolute top-0 left-0 w-full h-[2px] bg-[#006837] scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
-    <div className="relative z-10 p-4 w-full">
-      <p className="text-[#006837] font-black uppercase mb-1" style={{ fontSize: "8px", letterSpacing: "0.2em" }}>
-        {industry.id}
-      </p>
-      <p
-        className="text-white font-medium font-[family-name:var(--font-cormorant)] italic leading-tight"
-        style={{ fontSize: "clamp(0.9rem, 4vw, 1.25rem)" }}
-      >
-        {industry.shortName}
-      </p>
-    </div>
-  </Link>
-);
-
 const HomeIndustries = () => {
   const [mounted, setMounted] = useState(false);
-  const [layoutTier, setLayoutTier] = useState<LayoutTier>("desktop");
+  const [tier, setTier] = useState<ViewportTier>("desktop");
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setMounted(true);
-    const update = () => setLayoutTier(getLayoutTier());
+    const update = () => setTier(getViewportTier());
     update();
     window.addEventListener('resize', update);
-    const t = setTimeout(update, 300);
-    return () => { window.removeEventListener('resize', update); clearTimeout(t); };
+    return () => window.removeEventListener('resize', update);
   }, []);
 
   if (!mounted) return null;
 
-  const isWatch = layoutTier === "watch";
-  const isLandscapePhone = layoutTier === "landscapePhone";
-  const isPortraitMobile = layoutTier === "portraitMobile";
-  const isDesktop = layoutTier === "desktop";
-
-  if (isWatch) {
-    return (
-      <section
-        className="w-full bg-[#050505] text-white font-[family-name:var(--font-open-sans)]"
-        style={{ padding: "16px 8px" }}
-      >
-        <p className="text-[#006837] font-black uppercase mb-1" style={{ fontSize: "7px", letterSpacing: "0.2em" }}>
-          Sectors
-        </p>
-        <h2
-          className="font-bold font-[family-name:var(--font-cormorant)] italic text-white leading-tight mb-4"
-          style={{ fontSize: "12px" }}
-        >
-          Specialized <span className="text-[#006837]/80">Expertise.</span>
-        </h2>
-        <div className="flex flex-col gap-1">
-          {INDUSTRIES.map((ind, i) => (
-            <Link
-              key={ind.id}
-              href={ind.href}
-              className="flex items-center justify-between py-2 active:bg-white/5 px-1 rounded transition-colors"
-            >
-              <span className="text-white/80 font-bold" style={{ fontSize: "8px" }}>{ind.shortName}</span>
-              <span className="text-[#006837] font-black" style={{ fontSize: "8px" }}>→</span>
-            </Link>
-          ))}
-        </div>
-      </section>
-    );
-  }
-
-  const sectionPadding = isLandscapePhone
-    ? "clamp(1.5rem,4dvh,3rem) clamp(1rem,5vw,2rem)"
-    : isPortraitMobile
-    ? "clamp(3rem,6dvh,5rem) clamp(1rem,5vw,2rem)"
-    : "clamp(4rem,8dvh,8rem) clamp(2rem,6vw,4rem)";
+  const isWatch = tier === "watch";
+  const isPhone = tier === "phone";
+  const isLandscape = tier === "landscape";
 
   return (
-    <section className="relative w-full bg-[#050505] text-white font-[family-name:var(--font-open-sans)] overflow-hidden">
-      <div
-        className="absolute inset-0 pointer-events-none opacity-[0.03]"
-        style={{
-          backgroundImage: "linear-gradient(#006837 1px, transparent 1px), linear-gradient(90deg, #006837 1px, transparent 1px)",
-          backgroundSize: "64px 64px",
-        }}
+    <section className={`relative w-full bg-[#050505] text-white overflow-hidden font-[family-name:var(--font-open-sans)] ${
+      isWatch ? 'py-8' : isPhone ? 'py-16' : isLandscape ? 'py-12' : 'py-24 lg:py-48 pb-12 lg:pb-24'
+    }`}>
+      {/* Editorial Background Element */}
+      <div className="absolute top-0 right-0 w-full h-full opacity-[0.02] pointer-events-none" 
+        style={{ backgroundImage: 'radial-gradient(#006837 1px, transparent 1px)', backgroundSize: '80px 80px' }} 
       />
+      
+      {/* ── SEAMLESS TRANSITION GRADIENT ────────────────────────────────────────── */}
+      <div className="absolute bottom-0 right-0 w-full h-[60dvh] pointer-events-none overflow-hidden z-0">
+        <div className="absolute bottom-0 right-0 w-full h-full bg-gradient-to-tl from-white/[0.05] via-transparent to-transparent opacity-60" />
+      </div>
+      
+      {/* Subtle green glow for depth */}
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-5xl h-[40dvh] bg-[#006837]/5 blur-[120px] pointer-events-none" />
 
-      <div
-        className="absolute top-0 left-1/2 -translate-x-1/2 pointer-events-none opacity-20"
-        style={{
-          width: "100%",
-          height: "400px",
-          background: "radial-gradient(ellipse at center, #006837 0%, transparent 70%)",
-        }}
-      />
+      {/* Decorative vertical line */}
+      {!isWatch && !isPhone && (
+        <div className="absolute left-1/2 top-0 w-[1px] h-full bg-white/5 hidden lg:block" />
+      )}
 
-      <div className="relative z-10 max-w-7xl mx-auto" style={{ padding: sectionPadding }}>
-
-        <div
-          className={`flex ${isLandscapePhone || isPortraitMobile ? "flex-col" : "flex-row items-end justify-between"}`}
-          style={{
-            marginBottom: isLandscapePhone
-              ? "1.5rem"
-              : isPortraitMobile
-              ? "2.5rem"
-              : "4rem",
-          }}
-        >
-          <div>
-            <div className="overflow-hidden">
-              <span className="block text-[10px] font-black tracking-[0.4em] uppercase text-[#006837]/80 mb-3 animate-in fade-in slide-in-from-bottom-2 duration-700">
-                Sectors of Authority
+      <div className="relative z-10 max-w-[90rem] mx-auto px-6 sm:px-12 lg:px-24">
+        
+        {/* Editorial Header - Asymmetric */}
+        <div className={`flex flex-col lg:flex-row lg:items-start justify-between gap-8 ${
+          isWatch ? 'mb-6' : isPhone ? 'mb-12' : isLandscape ? 'mb-8' : 'mb-20 lg:mb-40'
+        }`}>
+          <div className="max-w-3xl">
+            <div className="overflow-hidden mb-4 lg:mb-6">
+              <span className={`block font-black tracking-[0.6em] uppercase text-[#006837] animate-in fade-in slide-in-from-bottom-4 duration-1000 ${
+                isWatch || isPhone ? 'text-[8px]' : 'text-[10px]'
+              }`}>
+                Strategic Sectors
               </span>
             </div>
-            <h2
-              className="font-medium font-[family-name:var(--font-cormorant)] italic text-white leading-[1.05]"
-              style={{
-                fontSize: isLandscapePhone
-                  ? "clamp(1.5rem, 4vw, 2.2rem)"
-                  : isPortraitMobile
-                  ? "clamp(2rem, 8vw, 2.8rem)"
-                  : "clamp(2.5rem, 5vw, 4.5rem)",
-              }}
-            >
-              The Industries <span className="opacity-50">We Power.</span>
+            <h2 className={`font-medium font-[family-name:var(--font-cormorant)] italic text-white leading-[1.05] tracking-tighter ${
+              isWatch ? 'text-2xl' : isPhone ? 'text-4xl' : isLandscape ? 'text-4xl' : 'text-5xl lg:text-[7rem] xl:text-[8.5rem]'
+            }`}>
+              Institutional <br />
+              <span className={`opacity-30 ${isWatch || isPhone || isLandscape ? '' : 'lg:ml-24'}`}>Excellence.</span>
             </h2>
           </div>
-
-          {isDesktop && (
-            <Link
-              href="/industries"
-              className="group flex items-center gap-3 text-white/40 hover:text-white transition-all duration-500 ease-out-expo mb-2"
-              style={{ fontSize: "0.85rem" }}
-            >
-              <span className="font-bold uppercase tracking-[0.2em]">All Sectors</span>
-              <span className="group-hover:translate-x-2 transition-transform duration-500 ease-out-expo">→</span>
-            </Link>
-          )}
+          
+          <div className={`lg:max-w-xs ${isWatch || isPhone ? 'pt-0' : isLandscape ? 'pt-0' : 'pt-4 lg:pt-20'}`}>
+            <p className={`text-white/40 font-medium leading-relaxed mb-6 ${isWatch || isPhone ? 'text-[9px]' : 'text-sm lg:text-base'}`}>
+              Directing high-impact workforce strategies across the critical industries that sustain global infrastructure and enterprise.
+            </p>
+            {!isWatch && (
+              <Link href="/industries" className="group flex items-center gap-4 text-[#006837] font-black uppercase tracking-[0.3em]" style={{ fontSize: isPhone || isLandscape ? '9px' : '10px' }}>
+                The Portfolio
+                <span className="group-hover:translate-x-2 transition-transform duration-700 ease-out-expo">→</span>
+              </Link>
+            )}
+          </div>
         </div>
 
-        {isDesktop && (
-          <>
-            <div
-              className="flex gap-4"
-              style={{ height: "clamp(420px, 50dvh, 600px)" }}
-            >
-              {INDUSTRIES.map((industry) => (
-                <AccordionCard key={industry.id} industry={industry} />
-              ))}
-            </div>
-
-            <div className="flex items-stretch border-t border-white/5 mt-12 pt-10">
-              {[
-                { value: "06", label: "Strategic Sectors" },
-                { value: "40+", label: "Specializations" },
-                { value: "5K+", label: "Deployments" },
-                { value: "20+", label: "Years Authority" },
-              ].map((stat, i) => (
-                <div
-                  key={i}
-                  className="flex flex-col items-center text-center gap-2 flex-1"
-                  style={{
-                    borderRight: i < 3 ? "1px solid rgba(255,255,255,0.05)" : "none",
-                  }}
-                >
-                  <span
-                    className="font-medium font-[family-name:var(--font-cormorant)] italic text-white"
-                    style={{ fontSize: "clamp(1.5rem, 2.5vw, 2.2rem)" }}
-                  >
-                    {stat.value}
-                  </span>
-                  <span
-                    className="text-white/40 font-black uppercase tracking-[0.2em]"
-                    style={{ fontSize: "9px" }}
-                  >
-                    {stat.label}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </>
-        )}
-
-        {isLandscapePhone && (
-          <div className="grid grid-cols-3 gap-3">
+        {/* Desktop: Mosaic / Mobile: Slider */}
+        <div className="relative">
+          {/* Horizontal Slider for Mobile/Tablet/Watch/Landscape */}
+          <div 
+            ref={scrollRef}
+            className={`flex lg:hidden gap-6 overflow-x-auto ${isWatch ? 'pb-6' : 'pb-12'} scrollbar-hide snap-x snap-mandatory`}
+            style={{ WebkitOverflowScrolling: 'touch' }}
+          >
             {INDUSTRIES.map((industry) => (
-              <CompactCard key={industry.id} industry={industry} />
+              <div key={industry.id} className={`${isWatch ? 'min-w-[85vw]' : isLandscape ? 'min-w-[50vw]' : 'min-w-[85vw] sm:min-w-[45vw]'} snap-center`}>
+                <IndustryEditorialCard industry={industry} tier={tier} />
+              </div>
             ))}
           </div>
-        )}
 
-        {isPortraitMobile && (
-          <>
-            <div className="grid grid-cols-2 gap-3">
-              {INDUSTRIES.map((industry) => (
-                <CompactCard key={industry.id} industry={industry} />
-              ))}
-            </div>
+          {/* Desktop Mosaic Grid - Asymmetrical Layout */}
+          <div className="hidden lg:grid grid-cols-12 gap-8 lg:gap-12 auto-rows-[450px]">
+            
+            {/* 01: Construction - Large / Anchor */}
+            <IndustryEditorialCard 
+              industry={INDUSTRIES[0]} 
+              className="col-span-7 row-span-2"
+              featured
+            />
 
-            <div className="flex justify-center mt-10">
-              <Link
-                href="/industries"
-                className="group flex items-center gap-3 px-10 py-4 border border-white/10 hover:bg-white hover:text-[#006837] text-white/70 rounded-full transition-all duration-500 ease-out-expo"
-                style={{ fontSize: "0.8rem", fontWeight: 800, letterSpacing: "0.2em", textTransform: "uppercase" }}
-              >
-                Explore All Sectors
-                <span className="group-hover:translate-x-2 transition-transform duration-500 ease-out-expo">→</span>
-              </Link>
-            </div>
-          </>
-        )}
+            {/* 02: Hospitality - Narrow / Vertical */}
+            <IndustryEditorialCard 
+              industry={INDUSTRIES[1]} 
+              className="col-span-5 row-span-1"
+            />
+
+            {/* 03: Healthcare - Small / Box */}
+            <IndustryEditorialCard 
+              industry={INDUSTRIES[2]} 
+              className="col-span-5 row-span-1"
+            />
+
+            {/* 04: Security - Middle / Break */}
+            <IndustryEditorialCard 
+              industry={INDUSTRIES[3]} 
+              className="col-span-4 row-span-1 mt-12"
+            />
+
+            {/* 05: Office & Admin - Large / Right */}
+            <IndustryEditorialCard 
+              industry={INDUSTRIES[4]} 
+              className="col-span-8 row-span-1"
+            />
+
+            {/* 06: Transportation - Bottom / Balanced */}
+            <IndustryEditorialCard 
+              industry={INDUSTRIES[5]} 
+              className="col-span-12 row-span-1 -mt-12"
+            />
+
+          </div>
+        </div>
       </div>
     </section>
+  );
+};
+
+const IndustryEditorialCard = ({ 
+  industry, 
+  className = "",
+  featured = false,
+  tier = "desktop"
+}: { 
+  industry: typeof INDUSTRIES[0], 
+  className?: string,
+  featured?: boolean,
+  tier?: ViewportTier
+}) => {
+  const isWatch = tier === "watch";
+  const isPhone = tier === "phone";
+  const isLandscape = tier === "landscape";
+
+  return (
+    <Link 
+      href={industry.href}
+      className={`group relative overflow-hidden flex flex-col justify-end transition-all duration-1000 ease-out-expo ${className}`}
+      style={{ 
+        height: isWatch ? '160px' : isLandscape ? '250px' : isPhone ? '320px' : 'auto', 
+        minHeight: !className && !isWatch && !isPhone && !isLandscape ? '400px' : 'auto' 
+      }}
+    >
+      {/* The Frame */}
+      <div className="absolute inset-0 bg-[#0a0a0a] group-hover:bg-black transition-colors duration-1000" />
+      
+      {/* The Image */}
+      <div className="absolute inset-0 overflow-hidden">
+        <Image 
+          src={industry.image} 
+          alt={industry.name} 
+          fill 
+          className={`object-cover grayscale transition-all duration-[2000ms] ease-out-expo group-hover:grayscale-0 group-hover:scale-110 opacity-30 group-hover:opacity-60`}
+          unoptimized
+        />
+        {/* Dark overlay for text legibility */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
+      </div>
+
+      {/* The Content */}
+      <div className={`relative z-10 ${isWatch ? 'p-3' : isPhone || isLandscape ? 'p-6' : 'p-8 lg:p-12'} transition-all duration-700`}>
+        <div className={`${isWatch || isPhone || isLandscape ? 'mb-1' : 'mb-6'} flex items-center gap-4 overflow-hidden`}>
+          <span className={`${isWatch || isPhone || isLandscape ? 'text-[8px]' : 'text-[10px]'} font-black text-[#006837] tracking-[0.5em] uppercase`}>
+            {industry.id}
+          </span>
+          {!isWatch && !isPhone && !isLandscape && <div className="h-[1px] w-8 bg-[#006837]/30 group-hover:w-16 transition-all duration-700 ease-out-expo" />}
+        </div>
+        
+        <h3 className={`font-medium font-[family-name:var(--font-cormorant)] italic text-white leading-tight tracking-tighter ${
+          isWatch ? 'text-base mb-0' : isPhone || isLandscape ? 'text-2xl mb-2' : featured ? 'text-4xl lg:text-7xl mb-4' : 'text-3xl lg:text-5xl mb-4'
+        }`}>
+          {industry.name}
+        </h3>
+
+        {!isWatch && (
+          <div className="max-w-md overflow-hidden">
+            <p className={`text-white/50 font-medium leading-relaxed transition-all duration-700 lg:opacity-0 lg:translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 ${
+              isPhone || isLandscape ? 'text-[10px]' : 'text-xs lg:text-sm'
+            }`}>
+              {industry.description}
+            </p>
+          </div>
+        )}
+        
+        {/* Subtle indicator */}
+        {!isWatch && !isPhone && !isLandscape && (
+          <div className="mt-8 flex items-center gap-4 lg:opacity-0 group-hover:opacity-100 transition-opacity duration-700">
+            <span className="text-[9px] font-black text-[#006837] uppercase tracking-[0.3em]">Explore Sector</span>
+            <span className="text-[#006837]">→</span>
+          </div>
+        )}
+      </div>
+
+      {/* Architectural Line */}
+      <div className="absolute bottom-0 left-0 w-full h-[1px] bg-white/5" />
+      <div className="absolute bottom-0 left-0 w-full h-[1px] bg-[#006837] scale-x-0 group-hover:scale-x-100 transition-transform duration-1000 origin-left" />
+    </Link>
   );
 };
 

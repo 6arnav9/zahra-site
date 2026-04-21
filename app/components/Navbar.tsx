@@ -136,17 +136,23 @@ const Navbar = () => {
           
           {/* Desktop Links (Hidden on mobile) */}
           <nav className="hidden lg:flex items-center gap-4 xl:gap-8 text-[10px] xl:text-[11px] uppercase font-bold tracking-[0.15em] whitespace-nowrap">
-            <Link href="/" className="hover:text-[#006837] transition-colors duration-300 py-4 relative group/link">
-              Home
-              <span className="absolute bottom-3 left-0 w-0 h-[1px] bg-[#006837] transition-all duration-300 group-hover/link:w-full" />
+            <Link href="/" className="hover:text-[#006837] transition-colors duration-300 py-4 group/link">
+              <span className="relative">
+                Home
+                <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#006837] transition-all duration-300 group-hover/link:w-full" />
+              </span>
             </Link>
-            <Link href="/about" className="hover:text-[#006837] transition-colors duration-300 py-4 relative group/link">
-              About Us
-              <span className="absolute bottom-3 left-0 w-0 h-[1px] bg-[#006837] transition-all duration-300 group-hover/link:w-full" />
+            <Link href="/about" className="hover:text-[#006837] transition-colors duration-300 py-4 group/link">
+              <span className="relative">
+                About Us
+                <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#006837] transition-all duration-300 group-hover/link:w-full" />
+              </span>
             </Link>
-            <Link href="/services" className="hover:text-[#006837] transition-colors duration-300 py-4 relative group/link">
-              Services
-              <span className="absolute bottom-3 left-0 w-0 h-[1px] bg-[#006837] transition-all duration-300 group-hover/link:w-full" />
+            <Link href="/services" className="hover:text-[#006837] transition-colors duration-300 py-4 group/link">
+              <span className="relative">
+                Services
+                <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#006837] transition-all duration-300 group-hover/link:w-full" />
+              </span>
             </Link>
             
             <Dropdown label="Industries" href="/industries" items={INDUSTRIES} />
@@ -180,21 +186,46 @@ const Navbar = () => {
               </div>
             </div>
 
-            <Link href="/careers" className="hover:text-[#006837] transition-colors duration-300 py-4 relative group/link">
-              Careers
-              <span className="absolute bottom-3 left-0 w-0 h-[1px] bg-[#006837] transition-all duration-300 group-hover/link:w-full" />
+            <Link href="/careers" className="hover:text-[#006837] transition-colors duration-300 py-4 group/link">
+              <span className="relative">
+                Careers
+                <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#006837] transition-all duration-300 group-hover/link:w-full" />
+              </span>
             </Link>
-            <Link href="/blog" className="hover:text-[#006837] transition-colors duration-300 py-4 pr-4 border-r border-white/10 relative group/link">
-              Blog
-              <span className="absolute bottom-3 left-0 w-0 h-[1px] bg-[#006837] transition-all duration-300 group-hover/link:w-full" />
+            <Link href="/blog" className="hover:text-[#006837] transition-colors duration-300 py-4 pr-4 border-r border-white/10 group/link">
+              <span className="relative">
+                Blog
+                <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[#006837] transition-all duration-300 group-hover/link:w-full" />
+              </span>
             </Link>
             
-            <div className="flex items-center gap-3 xl:gap-4 pl-2 xl:pl-4">
-              <Link href="/partner" className="px-5 xl:px-7 py-2.5 xl:py-3 border border-white/30 hover:border-white hover:bg-white hover:text-[#006837] rounded-full transition-all duration-500 ease-out-expo text-[9px] xl:text-[10px] font-black tracking-widest uppercase">
-                Partner
+            <div className="flex items-center gap-2 xl:gap-3 pl-2 xl:pl-4">
+              {/* Secondary CTA: Partner */}
+              <Link 
+                href="/partner" 
+                className="group relative border border-white/20 overflow-hidden transition-all duration-500 ease-out-expo hover:border-[#006837]/50 whitespace-nowrap"
+                style={{
+                  padding: "clamp(6px, 1.2vh, 10px) clamp(14px, 2.5vw, 20px)",
+                }}
+              >
+                <div className="absolute inset-0 bg-white/[0.03] -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out-expo" />
+                <span className="relative z-10 font-black uppercase tracking-[0.2em] text-white/70 group-hover:text-white transition-colors duration-500 text-[8px] xl:text-[10px]">
+                  Partner
+                </span>
               </Link>
-              <Link href="/contact" className="px-5 xl:px-7 py-2.5 xl:py-3 bg-[#006837] hover:bg-[#004d29] text-white rounded-full transition-all duration-500 ease-out-expo shadow-lg hover:shadow-2xl hover:-translate-y-0.5 text-[9px] xl:text-[10px] font-black tracking-widest uppercase">
-                Hire Talent
+
+              {/* Primary CTA: Hire Talent */}
+              <Link 
+                href="/contact" 
+                className="group relative bg-[#006837] overflow-hidden transition-all duration-500 ease-out-expo hover:scale-105 hover:shadow-[0_0_30px_rgba(0,104,55,0.3)] whitespace-nowrap"
+                style={{
+                  padding: "clamp(6px, 1.2vh, 10px) clamp(14px, 2.5vw, 20px)",
+                }}
+              >
+                <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out-expo" />
+                <span className="relative z-10 font-black uppercase tracking-[0.2em] text-white text-[8px] xl:text-[10px]">
+                  Hire Talent
+                </span>
               </Link>
             </div>
           </nav>

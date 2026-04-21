@@ -111,7 +111,7 @@ const Footer = () => {
                     Al Zahra
                   </span>
                   <span className="text-[9px] font-black tracking-[0.3em] uppercase mt-1 text-white/50">
-                    Authority
+                    Human Resources
                   </span>
                 </div>
               </Link>
@@ -161,17 +161,32 @@ const Footer = () => {
               </div>
 
               <div className="flex flex-col gap-3 mt-2">
-                <Link
-                  href="/contact"
-                  className="w-full px-6 py-4 bg-[#006837] hover:bg-[#004d29] text-white text-center font-black rounded-full transition-all duration-500 ease-out-expo shadow-xl text-[10px] uppercase tracking-widest"
+                {/* Primary CTA: Hire Talent */}
+                <Link 
+                  href="/contact" 
+                  className="group relative bg-[#006837] overflow-hidden transition-all duration-500 ease-out-expo hover:scale-105 hover:shadow-[0_0_30px_rgba(0,104,55,0.3)] text-center"
+                  style={{
+                    padding: "clamp(10px, 1.8vh, 14px) clamp(16px, 3vw, 24px)",
+                  }}
                 >
-                  Hire Talent
+                  <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out-expo" />
+                  <span className="relative z-10 font-black uppercase tracking-[0.2em] text-white" style={{ fontSize: 'clamp(9px, 0.8vw, 10px)' }}>
+                    Hire Talent
+                  </span>
                 </Link>
-                <Link
-                  href="/partner"
-                  className="w-full px-6 py-4 bg-transparent border border-white/10 hover:border-white hover:bg-white hover:text-black text-white text-center font-black rounded-full transition-all duration-500 ease-out-expo text-[10px] uppercase tracking-widest"
+
+                {/* Secondary CTA: Partner */}
+                <Link 
+                  href="/partner" 
+                  className="group relative border border-white/20 overflow-hidden transition-all duration-500 ease-out-expo hover:border-[#006837]/50 text-center"
+                  style={{
+                    padding: "clamp(10px, 1.8vh, 14px) clamp(16px, 3vw, 24px)",
+                  }}
                 >
-                  Partner
+                  <div className="absolute inset-0 bg-white/[0.03] -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out-expo" />
+                  <span className="relative z-10 font-black uppercase tracking-[0.2em] text-white/70 group-hover:text-white transition-colors duration-500" style={{ fontSize: 'clamp(9px, 0.8vw, 10px)' }}>
+                    Partner
+                  </span>
                 </Link>
               </div>
             </div>

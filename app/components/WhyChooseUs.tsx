@@ -5,14 +5,14 @@ import { useEffect, useState, useRef } from 'react';
 
 /**
  * FEATURES DATA
- * Sourced from Al Zahra Company Profile 2025 [cite: 1, 3]
+ * Refined for high-impact sales and brand storytelling.
  */
 const FEATURES = [
   {
     id: "01",
     title: "Global Reach, Local Expertise",
     description:
-      "With established strategic offices in Dubai, India, and Nepal, we command a vast, active network of skilled professionals across Asia, ready to deploy to the Middle East and Europe[cite: 15, 26].",
+      "We bridge continents to bring you the best. With strategic hubs in Dubai, India, and Nepal, Al Zahra commands a vast, elite network of professionals ready to deploy across the Middle East and Europe at a moment's notice.",
     image:
       "https://images.pexels.com/photos/325185/pexels-photo-325185.jpeg?auto=compress&cs=tinysrgb&w=1920",
     isStats: false,
@@ -21,7 +21,7 @@ const FEATURES = [
     id: "02",
     title: "100% Ethical Sourcing",
     description:
-      "We believe in uncompromising transparency[cite: 27, 42]. Our stringent screening process ensures that every candidate is treated ethically and every client receives thoroughly vetted, highly compliant talent[cite: 17, 18].",
+      "Integrity is our foundation. Our uncompromising screening process ensures that every candidate is treated with dignity and every partner receives vetted, highly compliant talent that reflects your company's values.",
     image:
       "https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg?auto=compress&cs=tinysrgb&w=1920",
     isStats: false,
@@ -30,7 +30,7 @@ const FEATURES = [
     id: "03",
     title: "Rapid & Compliant Deployment",
     description:
-      "Time is money on major projects. Our dedicated visa and mobilization teams handle complex immigration logistics swiftly, ensuring your workforce arrives on-site, perfectly on schedule[cite: 62, 65].",
+      "In global infrastructure, timing is everything. Our specialized mobilization teams navigate complex logistics and immigration with surgical precision, ensuring your workforce is on-site and operational exactly when you need them.",
     image:
       "https://images.pexels.com/photos/6169052/pexels-photo-6169052.jpeg?auto=compress&cs=tinysrgb&w=1920",
     isStats: false,
@@ -39,7 +39,7 @@ const FEATURES = [
     id: "04",
     title: "Deep Industry Specialization",
     description:
-      "We don't just supply bodies; we supply exact expertise[cite: 16]. From heavy civil engineering to specialized healthcare and hospitality, we understand the technical demands of your frontline[cite: 69, 71].",
+      "We don't just fill roles; we solve technical challenges. From heavy civil engineering to luxury hospitality, we provide the exact expertise required to drive your project's success and maintain your competitive edge.",
     image:
       "https://images.pexels.com/photos/1216589/pexels-photo-1216589.jpeg?auto=compress&cs=tinysrgb&w=1920",
     isStats: false,
@@ -48,7 +48,7 @@ const FEATURES = [
     id: "05",
     title: "Proven Track Record",
     description:
-      "Numbers speak louder than promises. Founded in 2001 [cite: 14], we have consistently delivered scale, quality, and reliability to the world's most demanding sectors for over two decades[cite: 24, 25].",
+      "Experience that speaks for itself. Since 2001, we have consistently delivered scale, quality, and unwavering reliability to the world's most demanding sectors, building a legacy of trust that spans over two decades.",
     image: "",
     isStats: true,
   },
@@ -96,19 +96,22 @@ const AnimatedCounter = ({
 };
 
 // ─── VIEWPORT TIER ───────────────────────────────────────────────────────────
-type ViewportTier = "watch" | "landscapePhone" | "normal";
+type ViewportTier = "watch" | "phone" | "landscape" | "tablet" | "desktop";
 function getViewportTier(): ViewportTier {
+  if (typeof window === 'undefined') return "desktop";
   const w = window.innerWidth;
   const h = window.innerHeight;
-  if (w < 220) return "watch";
-  if (h < 520 && w < 1024) return "landscapePhone";
-  return "normal";
+  if (w < 250) return "watch";
+  if (h < 500 && w > h) return "landscape";
+  if (w < 640) return "phone";
+  if (w < 1024) return "tablet";
+  return "desktop";
 }
 
 // ─── MAIN COMPONENT ──────────────────────────────────────────────────────────
 const WhyChooseUs = () => {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [tier, setTier] = useState<ViewportTier>("normal");
+  const [tier, setTier] = useState<ViewportTier>("desktop");
   const [navHeight, setNavHeight] = useState(64);
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
 
@@ -130,7 +133,8 @@ const WhyChooseUs = () => {
   }, []);
 
   const isWatch = tier === "watch";
-  const isLandscapePhone = tier === "landscapePhone";
+  const isPhone = tier === "phone";
+  const isLandscape = tier === "landscape";
 
   const effectiveNav = isWatch ? 28 : navHeight;
 
@@ -158,33 +162,33 @@ const WhyChooseUs = () => {
       style={{
         width: isWatch
           ? "16px"
-          : isLandscapePhone
-          ? "32px"
-          : "clamp(28px, 4vw, 72px)",
+          : isPhone || isLandscape
+          ? "28px"
+          : "clamp(32px, 4vw, 72px)",
       }}
     />
   );
 
   const fs = {
-    eyebrow:    isWatch ? "7px"  : isLandscapePhone ? "9px"  : "clamp(10px, 0.8vw, 11px)",
-    headline:   isWatch ? "10px" : isLandscapePhone ? "clamp(1rem, 4vw, 1.6rem)" : "clamp(1.4rem, 3.5vw, 3.5rem)",
-    slideNum:   isWatch ? "1rem" : isLandscapePhone ? "clamp(1.6rem, 6vw, 2.6rem)"    : "clamp(2rem, 5vw, 4.5rem)",
-    slideTitle: isWatch ? "9px"  : isLandscapePhone ? "clamp(1rem, 3.5vw, 1.8rem)"   : "clamp(1.5rem, 3vw, 3rem)",
-    slideBody:  isWatch ? "7px"  : isLandscapePhone ? "12px"                           : "clamp(0.85rem, 1.2vw, 1.1rem)",
-    statNum:    isWatch ? "clamp(0.9rem, 5.5vw, 1.35rem)" : isLandscapePhone ? "clamp(1.4rem, 4vw, 2.2rem)" : "clamp(2rem, 4vw, 3.5rem)",
-    statLabel:  isWatch ? "6px"  : isLandscapePhone ? "9px"                            : "clamp(8px, 0.7vw, 10px)",
+    eyebrow:    isWatch ? "7px"  : isPhone || isLandscape ? "9px"  : "clamp(10px, 0.8vw, 11px)",
+    headline:   isWatch ? "10px" : isPhone || isLandscape ? "clamp(1rem, 4vw, 1.4rem)" : "clamp(1.5rem, 3.5vw, 3.5rem)",
+    slideNum:   isWatch ? "1rem" : isPhone || isLandscape ? "clamp(1.4rem, 6vw, 2.2rem)"    : "clamp(2.5rem, 5vw, 4.5rem)",
+    slideTitle: isWatch ? "9px"  : isPhone || isLandscape ? "clamp(1rem, 3.5vw, 1.5rem)"   : "clamp(1.5rem, 3vw, 3rem)",
+    slideBody:  isWatch ? "7px"  : isPhone || isLandscape ? "11px"                           : "clamp(0.85rem, 1.2vw, 1.1rem)",
+    statNum:    isWatch ? "clamp(0.9rem, 5.5vw, 1.35rem)" : isPhone || isLandscape ? "clamp(1.4rem, 4vw, 2rem)" : "clamp(2.5rem, 4vw, 3.5rem)",
+    statLabel:  isWatch ? "6px"  : isPhone || isLandscape ? "8px"                            : "clamp(8px, 0.7vw, 10px)",
   };
 
   const hPad = isWatch 
     ? "8px" 
-    : isLandscapePhone 
-    ? "clamp(2rem, 8vw, 5rem)" 
-    : "clamp(1.5rem, 6vw, 4rem)";
+    : isPhone || isLandscape 
+    ? "clamp(1.2rem, 5vw, 3rem)" 
+    : "clamp(2rem, 8vw, 6rem)";
 
   const cardPaddingTop = isWatch
-    ? effectiveNav + 24
-    : isLandscapePhone
-    ? effectiveNav + 40 
+    ? effectiveNav + 16
+    : isPhone || isLandscape
+    ? effectiveNav + 32 
     : effectiveNav + 80;
 
   return (
@@ -237,7 +241,7 @@ const WhyChooseUs = () => {
           className="sticky left-0 w-full z-30 pointer-events-none"
           style={{
             top: `${effectiveNav}px`,
-            paddingTop: isWatch ? 4 : isLandscapePhone ? 12 : 24,
+            paddingTop: isWatch ? 4 : isPhone || isLandscape ? 12 : 24,
             paddingLeft: hPad,
             paddingRight: hPad,
           }}
@@ -277,7 +281,7 @@ const WhyChooseUs = () => {
                 style={{
                   minHeight: "100dvh",
                   paddingTop: cardPaddingTop,
-                  paddingBottom: isWatch ? 8 : isLandscapePhone ? 12 : 48,
+                  paddingBottom: isWatch ? 8 : isPhone || isLandscape ? 24 : 48,
                 }}
               >
                 <div
@@ -292,7 +296,7 @@ const WhyChooseUs = () => {
                     <div style={{ maxWidth: "48rem" }}>
                       <div
                         className="flex items-center gap-3"
-                        style={{ marginBottom: isWatch ? 4 : isLandscapePhone ? 10 : 20 }}
+                        style={{ marginBottom: isWatch ? 4 : isPhone || isLandscape ? 10 : 20 }}
                       >
                         <span
                           className="font-black text-[#006837] font-[family-name:var(--font-open-sans)] drop-shadow-2xl leading-none tracking-tighter"
@@ -307,7 +311,7 @@ const WhyChooseUs = () => {
                         className="font-medium font-[family-name:var(--font-cormorant)] italic leading-[1.1] text-white"
                         style={{
                           fontSize: fs.slideTitle,
-                          marginBottom: isWatch ? 4 : isLandscapePhone ? 10 : 20,
+                          marginBottom: isWatch ? 4 : isPhone || isLandscape ? 10 : 20,
                         }}
                       >
                         {feature.title}
@@ -330,7 +334,7 @@ const WhyChooseUs = () => {
                     <div className="w-full">
                       <div
                         className="flex items-center gap-4"
-                        style={{ marginBottom: isWatch ? 4 : isLandscapePhone ? 12 : 24 }}
+                        style={{ marginBottom: isWatch ? 4 : isPhone || isLandscape ? 12 : 24 }}
                       >
                         <span
                           className="font-black text-[#006837] font-[family-name:var(--font-open-sans)] drop-shadow-2xl leading-none tracking-tighter"
@@ -345,7 +349,7 @@ const WhyChooseUs = () => {
                         className="font-medium font-[family-name:var(--font-cormorant)] italic leading-[1.1] text-white"
                         style={{
                           fontSize: fs.slideTitle,
-                          marginBottom: isWatch ? 8 : isLandscapePhone ? 20 : 48,
+                          marginBottom: isWatch ? 8 : isPhone || isLandscape ? 20 : 48,
                         }}
                       >
                         {feature.title}
@@ -357,14 +361,14 @@ const WhyChooseUs = () => {
                           gridTemplateColumns: isWatch ? "1fr" : "1fr 1fr",
                           gap: isWatch
                             ? "8px 0"
-                            : isLandscapePhone
-                            ? "20px 32px"
+                            : isPhone || isLandscape
+                            ? "16px 24px"
                             : "clamp(32px, 5vw, 64px) clamp(40px, 8vw, 96px)",
                           maxWidth: isWatch ? "100%" : "44rem",
                         }}
                       >
                         {[
-                          { target: 20,   suffix: "+", duration: 2000, label: "Years of Authority" },
+                          { target: 20,   suffix: "+", duration: 2000, label: "Years of Human Resources" },
                           { target: 5000, suffix: "+", duration: 2500, label: "Strategic Deployments" },
                           { target: 40,   suffix: "+", duration: 1500, label: "Specialized Sectors" },
                           { target: 100,  suffix: "%", duration: 1000, label: "Compliant Ethics" },
@@ -396,7 +400,7 @@ const WhyChooseUs = () => {
           })}
         </div>
       </div>
-      <div style={{ height: isWatch ? "2rem" : isLandscapePhone ? "3rem" : "8rem" }} />
+      <div style={{ height: isWatch ? "2rem" : isPhone || isLandscape ? "3rem" : "8rem" }} />
     </section>
   );
 };

@@ -41,23 +41,23 @@ const CLIENT_NAMES = [
   "MERCURY ENG", "STRABAG SE", "REDCO INFRA", "PORR AG", "GULF CIVIL",
 ];
 
-type ViewportTier = "watch" | "landscapePhone" | "smallPhone" | "normal";
+type ViewportTier = "watch" | "phone" | "landscape" | "tablet" | "desktop";
 function getViewportTier(): ViewportTier {
-  if (typeof window === 'undefined') return "normal";
+  if (typeof window === 'undefined') return "desktop";
   const w = window.innerWidth;
   const h = window.innerHeight;
   
-  if (w < 220) return "watch";
-  if (h < 520 && w > h) return "landscapePhone";
-  if (w <= 380) return "smallPhone";
-  
-  return "normal";
+  if (w < 250) return "watch";
+  if (h < 500 && w > h) return "landscape";
+  if (w < 640) return "phone";
+  if (w < 1024) return "tablet";
+  return "desktop";
 }
 
 const Hero = () => {
   const [currentMediaIndex, setCurrentMediaIndex] = useState(0);
   const [mounted, setMounted] = useState(false);
-  const [tier, setTier] = useState<ViewportTier>("normal");
+  const [tier, setTier] = useState<ViewportTier>("desktop");
   const [navHeight, setNavHeight] = useState(64);
 
   useEffect(() => {
@@ -85,8 +85,9 @@ const Hero = () => {
   if (!mounted) return null;
 
   const isWatch = tier === "watch";
-  const isLandscapePhone = tier === "landscapePhone";
-  const isSmallPhone = tier === "smallPhone";
+  const isPhone = tier === "phone";
+  const isLandscape = tier === "landscape";
+  const isTablet = tier === "tablet";
 
   // ─── Apple Watch layout ───────────────────────────────────────────────────
   if (isWatch) {
@@ -109,23 +110,36 @@ const Hero = () => {
           <div className="absolute inset-0 bg-black/50 z-10" />
         </div>
 
-        <div className="relative z-20 flex flex-col items-center" style={{ gap: "4px" }}>
+        <div className="relative z-20 flex flex-col items-center w-full max-w-[140px]" style={{ gap: "4px" }}>
+          <div className="mb-1">
+            <span className="block font-black tracking-[0.2em] uppercase text-[#006837]" style={{ fontSize: "4px" }}>
+              Global Authority
+            </span>
+          </div>
           <h1
-            className="font-medium font-[family-name:var(--font-cormorant)] italic text-white leading-tight tracking-wide"
-            style={{ fontSize: "11px" }}
+            className="font-medium font-[family-name:var(--font-cormorant)] italic text-white leading-tight tracking-tight"
+            style={{ fontSize: "14px" }}
           >
-            Strategic <br/> Workforce.
+            Strategic Workforce
           </h1>
-          <p className="text-white/60 font-medium tracking-[0.1em] uppercase" style={{ fontSize: "5px" }}>
-            Global Ambitions.
+          <p className="text-white/60 font-medium tracking-[0.1em] leading-tight mb-2" style={{ fontSize: "6px" }}>
+            For Global Ambitions.
           </p>
-          <a
-            href="#contact"
-            className="bg-[#006837] text-white font-black rounded-full uppercase tracking-widest active:scale-95 transition-transform"
-            style={{ fontSize: "6px", padding: "4px 10px", marginTop: "6px" }}
-          >
-            Connect
-          </a>
+          
+          <div className="flex flex-col gap-1 w-full">
+            <button
+              className="bg-[#006837] text-white font-black uppercase tracking-widest active:scale-95 transition-transform flex items-center justify-center"
+              style={{ fontSize: "5px", padding: "6px 0", width: "100%" }}
+            >
+              Hire Talent
+            </button>
+            <button
+              className="border border-white/20 text-white/70 font-black uppercase tracking-widest active:scale-95 transition-transform flex items-center justify-center"
+              style={{ fontSize: "5px", padding: "6px 0", width: "100%" }}
+            >
+              Submit CV
+            </button>
+          </div>
         </div>
       </section>
     );
@@ -172,21 +186,23 @@ const Hero = () => {
         <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-transparent to-black/20 z-10" />
       </div>
 
-      {/* Hero content */}
+      {/* Hero content - flex-1 with overflow-y-auto ensures it can handle shorter viewports */}
       <div
-        className="relative z-20 flex-1 flex flex-col items-center lg:items-start justify-center w-full mx-auto min-h-0"
+        className="relative z-20 flex-1 flex flex-col items-center lg:items-start justify-center w-full mx-auto overflow-y-auto no-scrollbar"
         style={{
           maxWidth: "85rem",
-          paddingTop: isLandscapePhone || isSmallPhone ? navHeight + 16 : navHeight + 64,
-          paddingBottom: 48,
+          paddingTop: navHeight + 32,
+          paddingBottom: 64,
           paddingLeft:  "clamp(1.5rem, 8vw, 6rem)",
           paddingRight: "clamp(1.5rem, 8vw, 6rem)",
         }}
       >
-        <div className="flex flex-col items-center lg:items-start w-full text-center lg:text-left">
+        <div className="flex flex-col items-center lg:items-start w-full text-center lg:text-left py-8">
           
           <div className="overflow-hidden mb-4 lg:mb-8">
-            <span className="block text-[9px] sm:text-[10px] lg:text-xs font-black tracking-[0.15em] sm:tracking-[0.4em] uppercase text-[#006837] animate-in fade-in slide-in-from-bottom-4 duration-1000">
+            <span className="block font-black tracking-[0.15em] sm:tracking-[0.4em] uppercase text-[#006837] animate-in fade-in slide-in-from-bottom-4 duration-1000"
+              style={{ fontSize: isPhone || isLandscape ? '9px' : 'clamp(10px, 0.8vw, 12px)' }}
+            >
               International Recruitment Authority
             </span>
           </div>
@@ -194,26 +210,26 @@ const Hero = () => {
           <h1
             className="font-medium leading-[1.1] tracking-[-0.03em] serif-display text-white drop-shadow-2xl"
             style={{
-              fontSize: isLandscapePhone
+              fontSize: isLandscape
                 ? "clamp(1.5rem, 6vw, 2.5rem)"
-                : isSmallPhone
-                ? "clamp(2rem, 8vw, 2.8rem)"
-                : "clamp(2.5rem, 9vw, 6.5rem)",
-              marginBottom: isLandscapePhone || isSmallPhone ? "16px" : "clamp(24px, 4vw, 48px)",
+                : isPhone
+                ? "clamp(2rem, 9vw, 3rem)"
+                : "clamp(3rem, 8vw, 6.5rem)",
+              marginBottom: isLandscape || isPhone ? "16px" : "clamp(24px, 4vw, 48px)",
             }}
           >
             Strategic Workforce <br className="hidden lg:inline" />
             for Global <span className="opacity-70">Ambitions.</span>
           </h1>
 
-          {!isLandscapePhone && (
+          {!isLandscape && (
             <p
               className="text-white/70 max-w-xl font-medium tracking-wide drop-shadow-md leading-relaxed"
               style={{
-                fontSize: isSmallPhone ? "0.8rem" : "clamp(1rem, 1.5vw, 1.35rem)",
-                marginBottom: isSmallPhone ? "24px" : "clamp(40px, 5vw, 72px)",
-                paddingLeft: isSmallPhone ? "1rem" : "0",
-                paddingRight: isSmallPhone ? "1rem" : "0",
+                fontSize: isPhone ? "clamp(0.8rem, 4vw, 0.95rem)" : "clamp(1rem, 1.2vw, 1.25rem)",
+                marginBottom: isPhone ? "24px" : "clamp(40px, 4vw, 64px)",
+                paddingLeft: isPhone ? "1rem" : "0",
+                paddingRight: isPhone ? "1rem" : "0",
               }}
             >
               Building the human infrastructure for world-class enterprises across 
@@ -222,43 +238,54 @@ const Hero = () => {
           )}
 
           <div
-            className="flex items-center justify-center lg:justify-start flex-wrap"
-            style={{ gap: isLandscapePhone || isSmallPhone ? "16px" : "24px" }}
+            className={`flex items-center justify-center lg:justify-start ${isPhone ? 'flex-col w-full' : 'flex-row'}`}
+            style={{ gap: isLandscape || isPhone ? "12px" : "20px" }}
           >
+            {/* Primary CTA: Clients */}
             <button
-              className="bg-[#006837] hover:bg-[#004d29] text-white font-black rounded-full transition-all duration-500 ease-out-expo whitespace-nowrap shadow-2xl hover:-translate-y-1 uppercase tracking-[0.2em] border border-[#006837]"
+              className={`group relative bg-[#006837] overflow-hidden transition-all duration-500 ease-out-expo hover:scale-105 hover:shadow-[0_0_40px_rgba(0,104,55,0.3)] whitespace-nowrap flex items-center justify-center ${isPhone ? 'w-full max-w-[280px]' : ''}`}
               style={{
-                fontSize: isLandscapePhone || isSmallPhone ? "0.65rem" : "0.9rem",
-                padding: isLandscapePhone || isSmallPhone ? "12px 28px" : "18px 56px",
+                padding: isLandscape || isPhone 
+                  ? "clamp(12px, 2.5vh, 14px) 24px" 
+                  : "clamp(14px, 2vw, 18px) clamp(32px, 4vw, 44px)",
               }}
             >
-              Hire Talent
+              <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out-expo" />
+              <span className={`relative z-10 font-black uppercase tracking-[0.25em] text-white`} style={{ fontSize: isLandscape || isPhone ? '10px' : 'clamp(10px, 0.8vw, 11px)' }}>
+                Hire Talent
+              </span>
             </button>
+
+            {/* Secondary CTA: Candidates */}
             <button
-              className="bg-transparent hover:bg-white/10 border border-white/20 text-white font-black rounded-full transition-all duration-500 ease-out-expo whitespace-nowrap uppercase tracking-[0.2em] backdrop-blur-sm"
+              className={`group relative border border-white/20 overflow-hidden transition-all duration-500 ease-out-expo hover:border-[#006837]/50 whitespace-nowrap backdrop-blur-sm flex items-center justify-center ${isPhone ? 'w-full max-w-[280px]' : ''}`}
               style={{
-                fontSize: isLandscapePhone || isSmallPhone ? "0.75rem" : "0.9rem",
-                padding: isLandscapePhone || isSmallPhone ? "12px 28px" : "18px 56px",
+                padding: isLandscape || isPhone 
+                  ? "clamp(12px, 2.5vh, 14px) 24px" 
+                  : "clamp(14px, 2vw, 18px) clamp(32px, 4vw, 44px)",
               }}
             >
-              Submit CV
+              <div className="absolute inset-0 bg-white/[0.03] -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out-expo" />
+              <span className={`relative z-10 font-black uppercase tracking-[0.25em] text-white/70 group-hover:text-white transition-colors duration-500`} style={{ fontSize: isLandscape || isPhone ? '10px' : 'clamp(10px, 0.8vw, 11px)' }}>
+                Submit CV
+              </span>
             </button>
           </div>
         </div>
       </div>
 
-      {/* Marquee bar */}
+      {/* Marquee bar - flex-none ensures it stays at the bottom */}
       <div
         className="relative z-30 w-full bg-black/20 backdrop-blur-2xl border-t border-white/5 flex-none overflow-hidden"
-        style={{ padding: isLandscapePhone || isSmallPhone ? "10px 0" : "clamp(16px, 3vw, 42px) 0" }}
+        style={{ padding: isLandscape || isPhone ? "10px 0" : "clamp(16px, 2vw, 32px) 0" }}
       >
         <div className="relative w-full overflow-hidden">
           <div
             className="hero-scroll pointer-events-none opacity-40"
-            style={{ gap: isSmallPhone ? "3rem" : "clamp(4rem, 10vw, 12rem)", paddingRight: isSmallPhone ? "3rem" : "clamp(4rem, 10vw, 12rem)" }}
+            style={{ gap: isPhone ? "3rem" : "clamp(4rem, 8vw, 10rem)", paddingRight: isPhone ? "3rem" : "clamp(4rem, 8vw, 10rem)" }}
           >
-            <LogoTrack logos={CLIENT_NAMES} isLandscapePhone={isLandscapePhone} isSmallPhone={isSmallPhone} />
-            <LogoTrack logos={CLIENT_NAMES} isLandscapePhone={isLandscapePhone} isSmallPhone={isSmallPhone} />
+            <LogoTrack logos={CLIENT_NAMES} isLandscapePhone={isLandscape} isSmallPhone={isPhone} />
+            <LogoTrack logos={CLIENT_NAMES} isLandscapePhone={isLandscape} isSmallPhone={isPhone} />
           </div>
         </div>
       </div>
@@ -269,7 +296,7 @@ const Hero = () => {
 const LogoTrack = ({ logos, isLandscapePhone, isSmallPhone }: { logos: string[]; isLandscapePhone: boolean; isSmallPhone: boolean }) => (
   <div
     className="flex items-center grayscale invert brightness-0"
-    style={{ gap: isSmallPhone ? "3rem" : "clamp(4rem, 10vw, 12rem)" }}
+    style={{ gap: isSmallPhone ? "3rem" : "clamp(4rem, 8vw, 10rem)" }}
   >
     {logos.map((logo, i) => (
       <span
