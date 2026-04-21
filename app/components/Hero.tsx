@@ -186,9 +186,9 @@ const Hero = () => {
         <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-transparent to-black/20 z-10" />
       </div>
 
-      {/* Hero content - flex-1 with overflow-y-auto ensures it can handle shorter viewports */}
+      {/* Hero content */}
       <div
-        className="relative z-20 flex-1 flex flex-col items-center lg:items-start justify-center w-full mx-auto overflow-y-auto no-scrollbar"
+        className="relative z-20 flex-1 flex flex-col items-center lg:items-start justify-center w-full mx-auto"
         style={{
           maxWidth: "85rem",
           paddingTop: navHeight + 32,
@@ -197,7 +197,7 @@ const Hero = () => {
           paddingRight: "clamp(1.5rem, 8vw, 6rem)",
         }}
       >
-        <div className="flex flex-col items-center lg:items-start w-full text-center lg:text-left py-8">
+        <div className="flex flex-col items-center lg:items-start w-full text-center lg:text-left">
           
           <div className="overflow-hidden mb-4 lg:mb-8">
             <span className="block font-black tracking-[0.15em] sm:tracking-[0.4em] uppercase text-[#006837] animate-in fade-in slide-in-from-bottom-4 duration-1000"
