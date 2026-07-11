@@ -115,6 +115,48 @@ The interface uses flat, crisp borders and layered background opacities to indic
 ### Navigation
 - Sticky/sticky navigation with a blurred backdrop-filter (`backdrop-blur-md`). Links transition to brand green on hover with a clean slide-in underline.
 
+### Extracted Core Components
+
+To support absolute visual consistency and clean codebase architecture, the following core components are exported from the design system (`app/components/ui`):
+
+#### 1. `<Section>`
+An architectural wrapper that standardizes sections, responsive paddings, background color behaviors, and luxury design details like grid and glows.
+- **Props**:
+  - `bg`: `"ink"` (default `#050505`) | `"black"` | `"transparent"`
+  - `showGrid`: `boolean` (subtle radial-gradient dot background)
+  - `gridSize`: `"sm" | "md" | "lg"` (default `"md"`)
+  - `showGlow`: `boolean` (ambient editorial background glowing orb)
+  - `glowPosition`: `"center" | "right" | "bottom" | "top-right"`
+  - `glowColor`: `"green" | "gold"`
+  - `paddingSize`: `"none" | "sm" | "md" | "lg" | "xl"`
+
+#### 2. `<SectionHeader>`
+Standardizes kicker eyebrows, titles/headlines, and readable description layouts.
+- **Props**:
+  - `eyebrow`: `string` (uppercase, tracked, green kicker)
+  - `title`: `ReactNode` (Cormorant serif italic header text)
+  - `description`: `string` (Open Sans readable paragraph text)
+  - `align`: `"left" | "center" | "right"`
+  - `layout`: `"stacked" | "split"` (split places the description/actions on the right side on desktop)
+  - `actions`: `ReactNode` (optional action elements)
+
+#### 3. `<Button>`
+A premium, animated action component supporting buttons and next/link elements.
+- **Props**:
+  - `variant`: `"primary" | "secondary" | "outline" | "text"`
+  - `href`: `string` (converts button to Next.js link on supply)
+  - `showArrow`: `boolean` (appends sliding hover arrow)
+  - `size`: `"sm" | "md" | "lg"`
+
+#### 4. `<AnimatedCounter>`
+An exponential ease-out statistical counter component for numbers, ratios, and metrics.
+- **Props**:
+  - `target`: `number` (value to count up to)
+  - `duration`: `number` (animation length in ms)
+  - `suffix`: `string` (e.g. `"+"`, `"%"` or text suffix)
+  - `isActive`: `boolean` (trigger animation on scroll visibility)
+
+
 ## 6. Do's and Don'ts
 
 ### Do:

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Montserrat, Open_Sans, Cinzel } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 // IMPORT COMPONENTS
 import Navbar from "./components/Navbar"; 
@@ -49,7 +50,10 @@ export default function RootLayout({
             {children}
         </main>
         <Footer />
-      </body>
+      {/* impeccable-live-start */}
+<Script src="http://localhost:8400/live.js" strategy="afterInteractive" />
+{/* impeccable-live-end */}
+</body>
     </html>
   );
 }
