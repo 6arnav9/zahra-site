@@ -242,16 +242,16 @@ export default function AboutHero() {
                 <Button
                   href="/contact/hire"
                   variant="primary"
-                  size="md"
-                  className="shadow-lg text-center flex-1 min-w-[140px] px-3.5 sm:px-4 lg:px-6 py-2 sm:py-2.5 text-xs sm:text-sm tracking-[0.1em] sm:tracking-[0.14em]"
+                  size="sm"
+                  className="shadow-lg text-center flex-1 min-w-[130px] px-3 sm:px-4 lg:px-5 py-2 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] tracking-[0.1em] sm:tracking-[0.12em]"
                 >
                   Explore Governance
                 </Button>
                 <Button
                   href="/contact/partner"
                   variant="outline"
-                  size="md"
-                  className="shadow-lg text-center flex-1 min-w-[140px] px-3.5 sm:px-4 lg:px-6 py-2 sm:py-2.5 text-xs sm:text-sm tracking-[0.1em] sm:tracking-[0.14em] border-white/20 hover:border-brand-gold/60"
+                  size="sm"
+                  className="shadow-lg text-center flex-1 min-w-[130px] px-3 sm:px-4 lg:px-5 py-2 sm:py-2 text-[11px] sm:text-xs lg:text-[13px] tracking-[0.1em] sm:tracking-[0.12em] border-white/20 hover:border-brand-gold/60"
                 >
                   Request Deployment
                 </Button>
@@ -313,16 +313,16 @@ export default function AboutHero() {
               <Button
                 href="/contact/hire"
                 variant="primary"
-                size={isShortScreen || isPhone ? "sm" : "lg"}
-                className="shadow-2xl text-center w-full max-w-[280px] sm:max-w-none sm:w-auto px-4 xs:px-5 sm:px-6 lg:px-8 py-2 sm:py-2.5 lg:py-3.5 text-xs sm:text-sm lg:text-base tracking-[0.12em] sm:tracking-[0.16em] lg:tracking-[0.2em] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
+                size={isShortScreen || isPhone ? "sm" : "md"}
+                className="shadow-2xl text-center w-full max-w-[280px] sm:max-w-none sm:w-auto px-4 xs:px-5 sm:px-6 lg:px-7 py-2 sm:py-2.5 lg:py-3 text-[11px] xs:text-xs sm:text-[13px] lg:text-sm tracking-[0.12em] sm:tracking-[0.16em] lg:tracking-[0.2em] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
               >
                 Explore Governance
               </Button>
               <Button
                 href="/contact/partner"
                 variant="outline"
-                size={isShortScreen || isPhone ? "sm" : "lg"}
-                className="shadow-2xl text-center w-full max-w-[280px] sm:max-w-none sm:w-auto px-4 xs:px-5 sm:px-6 lg:px-8 py-2 sm:py-2.5 lg:py-3.5 text-xs sm:text-sm lg:text-base tracking-[0.12em] sm:tracking-[0.16em] lg:tracking-[0.2em] border-white/20 hover:border-brand-gold/60 hover:bg-brand-gold/5 transition-all duration-300"
+                size={isShortScreen || isPhone ? "sm" : "md"}
+                className="shadow-2xl text-center w-full max-w-[280px] sm:max-w-none sm:w-auto px-4 xs:px-5 sm:px-6 lg:px-7 py-2 sm:py-2.5 lg:py-3 text-[11px] xs:text-xs sm:text-[13px] lg:text-sm tracking-[0.12em] sm:tracking-[0.16em] lg:tracking-[0.2em] border-white/20 hover:border-brand-gold/60 hover:bg-brand-gold/5 transition-all duration-300"
               >
                 Request Deployment
               </Button>
