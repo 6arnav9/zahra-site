@@ -40,7 +40,7 @@ const CEOMessage = () => {
           Architecting the <span className="text-[#006837]">Future.</span>
         </h2>
         <div className="relative w-24 h-32 mb-4 rounded-sm overflow-hidden">
-          <Image src="/ceo-headshot.png" alt="CEO" fill className="object-cover" />
+          <Image src="/ceo-headshot2.png" alt="CEO" fill className="object-cover" />
         </div>
         <p className="text-[7px] text-white/50 leading-relaxed">
           Delivering reliability at scale since 2001.
@@ -64,7 +64,7 @@ const CEOMessage = () => {
             
             <div className="relative w-full h-full overflow-hidden rounded-sm transition-all duration-1000 shadow-2xl">
               <Image 
-                src="/ceo-headshot.png" 
+                src="/ceo-headshot2.png" 
                 alt="Ashish Kumar Singh - CEO" 
                 fill 
                 className="object-cover object-center scale-105 group-hover:scale-100 transition-transform duration-1000 ease-out-expo"
