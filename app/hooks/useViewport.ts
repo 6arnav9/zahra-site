@@ -30,7 +30,14 @@ export function useViewport() {
   }, []);
 
   const isWatch = width < 250;
-  const isLandscape = height < 520 && width > height;
+  // Phone Landscape: Matches all phone models in landscape mode (height < 500px and width < 960px)
+  const isPhoneLandscape = width > height && height < 500 && width < 960;
+  
+  // Tablet Landscape: Matches all tablet & foldable devices held horizontally (height between 500px and 920px and width < 1400px)
+  // Triggers the 2-column split layout (left narrative + right 3 vertical stat cards) for Surface Pro, Surface Duo, Galaxy Tab S7/S8/S9, iPad Pro/Air, and MacBook Air
+  const isTabletLandscape = width > height && height >= 500 && height <= 920 && width < 1400;
+  
+  const isLandscape = isPhoneLandscape || isTabletLandscape;
   const isSmallPhone = width <= 380;
   const isPhone = width < 640;
   const isTablet = width >= 640 && width < 1024;
@@ -48,7 +55,9 @@ export function useViewport() {
     navHeight,
     isWatch,
     isLandscape,
-    isLandscapePhone: isLandscape, // Compatibility alias
+    isPhoneLandscape,
+    isTabletLandscape,
+    isLandscapePhone: isPhoneLandscape,
     isSmallPhone,
     isPhone,
     isTablet,
