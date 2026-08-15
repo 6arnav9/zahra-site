@@ -4,6 +4,7 @@ import { useViewport } from "../hooks/useViewport";
 import AboutHero from "../components/pages/about/AboutHero";
 import AboutTeam from "../components/pages/about/AboutTeam";
 import AboutTimeline from "../components/pages/about/AboutTimeline";
+import AboutCTA from "../components/pages/about/AboutCTA";
 
 export default function AboutPage() {
   const { mounted } = useViewport();
@@ -15,6 +16,7 @@ export default function AboutPage() {
       <AboutHero />
       <AboutTeam />
       <AboutTimeline />
+      <AboutCTA />
     </div>
   );
 }
